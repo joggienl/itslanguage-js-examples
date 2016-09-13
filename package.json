@@ -1,0 +1,19 @@
+{
+  "name": "itslanguage-js-examples",
+  "version": "0.0.0",
+  "description": "Examples for the ITSLanguage JavaScript SDK",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itslanguage/itslanguage-js-examples.git"
+  },
+  "author": "ITSLanguage",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itslanguage/itslanguage-js-examples/issues"
+  },
+  "homepage": "https://github.com/itslanguage/itslanguage-js-examples#readme"
+}
