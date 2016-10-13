@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ITSLanguage SDK administrative demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="../css/itsl_administrative_reference.css"/>
+    <link rel="stylesheet" href="../css/itsl_audio_components.css"/>
+  </head>
+  <body>
+    <div>
+      <h2>Server configuration</h2>
+      <label for="apiUrl">REST API URL</label>
+      <input id="apiUrl" value="https://api.itslanguage.nl"/>
+    </div>
+
+    <div>
+      <h2>Admin Authentication</h2>
+      <label for="principalAdmin">Principal *</label>
+      <input id="principalAdmin" name="adminPrincipal" value="michiel.sanders@itslanguage.nl"/>
+      <br/>
+      <label for="credentialsAdmin">Credentials *</label>
+      <input id="credentialsAdmin" type="password" name="adminCredentials" value="test"/>
+      <br/>
+      <input type="button" id="applyAdminCredentials" value="Apply admin authentication method"/>
+    </div>
+
+    <div>
+      <h2>Tenant</h2>
+      <label for="organisationTenant">Tenant name *</label>
+      <input id="organisationTenant" name="tenant"/>
+      <br/>
+      <label for="organisationIdTenant">Tenant ID</label>
+      <input id="organisationIdTenant" name="tenantId"/>
+      <br/>
+      <input type="button" id="createTenant" value="Create tenant"/>
+    </div>
+
+    <div>
+      <h2>Tenant Authentication</h2>
+      <label for="principalTenant">Principal</label>
+      <input id="principalTenant" name="principal"/>
+      <br/>
+      <label for="credentialsTenant">Credentials</label>
+      <input id="credentialsTenant" type="password" name="credentials"/>
+      <br/>
+      <input type="button" id="createCredentialsTenant" value="Create credentials"/>
+      <br/>
+      <input type="button" id="applyCredentialsTenant" value="Apply tenant authentication method"/>
+    </div>
+
+    <div>
+      <h2>Organisation</h2>
+      <label for="organisation">Organisation name *</label>
+      <input id="organisation" name="organisation"/>
+      <br/>
+      <label for="organisationId">Organisation ID</label>
+      <input id="organisationId" name="organisationId"/>
+      <br/>
+      <input type="button" id="createOrganisation" value="Create organisation"/>
+    </div>
+
+    <div>
+      <h2>Student</h2>
+      <label for="student">Student</label>
+      <input id="student" name="student"/>
+
+      <br/>
+      <label for="studentId">Student ID</label>
+      <input id="studentId" name="studentId"/>
+      <br/>
+      <input type="button" id="createStudent" value="Create Student"/>
+    </div>
+
+    <script src="../js/itsl_administrative_reference/bundle.js"></script>
+  </body>
+</html>

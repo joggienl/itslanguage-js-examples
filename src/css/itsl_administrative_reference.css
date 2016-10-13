@@ -1,0 +1,164 @@
+/* Verdor prefix mixins */
+/* There are 2 'themes' defined here.
+   They can be applied by adding the `user` or `model` class
+   to the visual component container.
+*/
+.user .player .handle,
+.user .player .playToggle,
+.user .recorder .recordToggle {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
+    background-image: -o-radial-gradient(circle, #dee9f3, #5581b2, #dee9f3);
+    background-repeat: no-repeat;
+}
+
+.user .player .handle:hover,
+.user .player .playToggle:hover,
+.user .recorder .recordToggle:hover,
+.user .player .handleactive,
+.user .player .playToggleactive,
+.user .recorder .recordToggleactive {
+    box-shadow: inset 3px 5px 2px #426892;
+}
+
+.user .player .handle:disabled:hover,
+.user .player .playToggle:disabled:hover,
+.user .recorder .recordToggle:disabled:hover {
+    box-shadow: none;
+}
+
+.model .player .handle,
+.model .player .playToggle,
+.model .recorder .recordToggle {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
+    background-image: -o-radial-gradient(circle, #e6e9c2, #7c842d, #e6e9c2);
+    background-repeat: no-repeat;
+}
+
+.model .player .handle:hover,
+.model .player .playToggle:hover,
+.model .recorder .recordToggle:hover,
+.model .player .handleactive,
+.model .player .playToggleactive,
+.model .recorder .recordToggleactive {
+    box-shadow: inset 3px 5px 2px #585e20;
+}
+
+.model .player .handle:disabled:hover,
+.model .player .playToggle:disabled:hover,
+.model .recorder .recordToggle:disabled:hover {
+    box-shadow: none;
+}
+
+/* The `user` or `model` class should also be applied within in the
+   SegmentPlayer, where there's a mix of `user/model` content.
+*/
+.user .player .loading,
+.loading.user {
+    background-color: #5581b2;
+    background-image: -moz-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dee9f3), to(#5581b2));
+    background-image: -webkit-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -o-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: linear-gradient(to bottom, #dee9f3, #5581b2);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdee9f3', endColorstr='#ff5581b2', GradientType=0);
+}
+
+.model .player .loading,
+.loading.model {
+    background-color: #7c842d;
+    background-image: -moz-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e6e9c2), to(#7c842d));
+    background-image: -webkit-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -o-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: linear-gradient(to bottom, #e6e9c2, #7c842d);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e9c2', endColorstr='#ff7c842d', GradientType=0);
+}
+
+.segment.user {
+    opacity: 0.4;
+    background-color: #5581b2;
+    background-image: -moz-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dee9f3), to(#5581b2));
+    background-image: -webkit-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -o-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: linear-gradient(to bottom, #dee9f3, #5581b2);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdee9f3', endColorstr='#ff5581b2', GradientType=0);
+}
+
+.segment.model {
+    opacity: 0.4;
+    background-color: #7c842d;
+    background-image: -moz-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e6e9c2), to(#7c842d));
+    background-image: -webkit-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -o-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: linear-gradient(to bottom, #e6e9c2, #7c842d);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e9c2', endColorstr='#ff7c842d', GradientType=0);
+}
+
+.drop {
+    width: 100px;
+    height: 100px;
+}
+
+.drop.user {
+    background-color: #dee9f3;
+}
+
+.drop.model {
+    background-color: #e6e9c2;
+}
+
+.colouredSentence {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.colouredSentence .good {
+    color: #39972c;
+}
+
+.colouredSentence .moderate {
+    color: #f19020;
+    text-decoration: underline;
+}
+
+.colouredSentence .bad {
+    color: #c00817;
+    text-decoration: line-through;
+}
+
+.colouredSentence .punctuation {
+    color: #39972c;
+}
+
+.detailedScores td.good {
+    color: #39972c;
+}
+
+.detailedScores td.moderate {
+    color: #f19020;
+}
+
+.detailedScores td.bad {
+    color: #c00817;
+}
+
+label{
+    width:140px;
+    align:right;
+    display: inline-block;
+}
+
+input{
+  width:300px;
+}

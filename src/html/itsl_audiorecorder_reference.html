@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ITSLanguage SDK audio recorder demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="../css/itsl_administrative_reference.css"/>
+    <link rel="stylesheet" href="../css/itsl_audio_components.css"/>
+  </head>
+  <body>
+    <div>
+      <h2>Server configuration</h2>
+      <label for="apiUrl">REST API URL</label>
+      <input id="apiUrl"/>
+    </div>
+
+    <div>
+      <h2>Tenant</h2>
+      <label for="tenantId">Tenant ID</label>
+      <input id="tenantId"/>
+    </div>
+
+    <div>
+      <h2>Tenant Authentication</h2>
+      <label for="principal">Principal</label>
+      <input id="principal"/>
+      <br/>
+      <label for="credentials">Credentials</label>
+      <input type="password" id="credentials"/>
+      <br/>
+      <input type="button" id="applyCredentials" value="Apply authentication method"/>
+    </div>
+
+    <div>
+      <h2>Organisation</h2>
+      <label for="organisationId">Organisation ID</label>
+      <input id="organisationId" name="organisationId" value="dummy"/>
+    </div>
+
+    <div>
+      <h2>Speech Challenge</h2>
+      <label for="topic">Topic</label>
+      <input id="topic" value="What can you tell about the baby?"/>
+      <br/>
+      <input type="button" id="createSpeechChallenge" value="Create challenge"/>
+      <br/>
+      <label for="speechChallengeId">Challenge ID</label>
+      <input id="speechChallengeId" readonly/>
+    </div>
+
+    <div>
+      <h2>Student</h2>
+      <label for="studentId">Student ID</label>
+      <input id="studentId" name="studentId" value="dummy"/>
+    </div>
+
+    <div>
+      <h2>WebSocket</h2>
+      <label for="wsUrl">Websocket URL</label>
+      <input id="wsUrl"/>
+      <br/>
+      <label for="tokenId">Token</label>
+      <input id="tokenId" value="dummy"/>
+      <br/>
+      <input type="button" id="applyToken" value="Apply token, connect"/>
+      <br/>
+      <label for="connection">Connection status</label>
+      <input id="connection" readonly/>
+    </div>
+
+    <div>
+      <h2>Speech recording</h2>
+      <input type="button" id="startStreamingRecording" value="Start new recording"/>
+      <div id="recorder" class="defaultRecorder user"></div>
+      <br/>
+      <label for="recordingId">Recording ID</label>
+      <input id="recordingId" readonly/>
+      <br/>
+      <label for="recordingDownloadUrl">Download URL</label>
+      <input id="recordingDownloadUrl" readonly/>
+      <br/>
+      <label for="failureMessage">Failure message</label>
+      <input id="failureMessage" readonly/>
+    </div>
+
+    <script src="../js/itsl_audiorecorder_reference/bundle.js"></script>
+  </body>
+</html>

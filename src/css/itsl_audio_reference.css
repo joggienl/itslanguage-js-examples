@@ -1,0 +1,520 @@
+/* Verdor prefix mixins */
+/* combinator is a wrapper class for player and recorder.
+   It makes sure the recording area stays at the left side */
+.combinator {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.combinator .recorder {
+    height: 100%;
+    width: 60px;
+}
+
+.combinator .player {
+    height: 100%;
+    top: 10px;
+    left: 60px;
+}
+
+.defaultRecorder {
+    height: 60px;
+    width: 480px;
+}
+
+.defaultPlayer {
+    height: 48px;
+    width: 400px;
+}
+
+.player {
+    display: block;
+    height: 48px;
+    width: 400px;
+    position: absolute;
+    left: 0;
+    margin: 0;
+}
+
+.player .timeindication {
+    font: 13px/20px "Helvetica Neue", Arial, sans-serif;
+    line-height: 46px;
+    position: absolute;
+    right: 0;
+    width: 95px;
+    text-align: center;
+    font-size: 11px;
+    color: #6e6e6e;
+    margin-right: 10px;
+}
+
+.player .wrapper .timeindication {
+    right: 40px;
+}
+
+.player .gutter {
+    position: absolute;
+    top: 19px;
+    left: 50px;
+    right: 105px;
+    height: 8px;
+    border: 1px solid #e2e2e2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.player .wrapper .gutter {
+    right: 90px;
+}
+
+.player .segment {
+    background-color: #6e6e6e;
+    background-image: -moz-linear-gradient(top, #e2e2e2, #6e6e6e);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e2e2e2), to(#6e6e6e));
+    background-image: -webkit-linear-gradient(top, #e2e2e2, #6e6e6e);
+    background-image: -o-linear-gradient(top, #e2e2e2, #6e6e6e);
+    background-image: linear-gradient(to bottom, #e2e2e2, #6e6e6e);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe2e2e2', endColorstr='#ff6e6e6e', GradientType=0);
+    display: block;
+    float: left;
+    min-width: 6px;
+    height: 8px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.player .loading {
+    background-color: #6e6e6e;
+    background-image: -moz-linear-gradient(top, #e2e2e2, #6e6e6e);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e2e2e2), to(#6e6e6e));
+    background-image: -webkit-linear-gradient(top, #e2e2e2, #6e6e6e);
+    background-image: -o-linear-gradient(top, #e2e2e2, #6e6e6e);
+    background-image: linear-gradient(to bottom, #e2e2e2, #6e6e6e);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe2e2e2', endColorstr='#ff6e6e6e', GradientType=0);
+    display: block;
+    float: left;
+    min-width: 6px;
+    height: 8px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.player .handle {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    outline: 0;
+    top: -6px;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -o-radial-gradient(circle, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-repeat: no-repeat;
+}
+
+.player .handle:disabled {
+    display: none;
+}
+
+.player .handle:hover {
+    box-shadow: inset 3px 5px 2px #626262;
+}
+
+.player .playToggle {
+    position: absolute;
+    top: 9px;
+    left: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    outline: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -o-radial-gradient(circle, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-repeat: no-repeat;
+}
+
+.player .playToggle:disabled {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -o-radial-gradient(circle, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-repeat: no-repeat;
+    cursor: default;
+    opacity: 0.3;
+}
+
+.player .playToggle:hover {
+    box-shadow: inset 3px 5px 2px #626262;
+}
+
+.player .playToggle:disabled:hover {
+    box-shadow: none;
+}
+
+.player .playToggle .icon {
+    position: relative;
+    left: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    height: 45%;
+    background-image: url(../images/svg/play.svg);
+    background-repeat: no-repeat;
+}
+
+.player .playToggle.playing .icon {
+    background-image: url(../images/svg/pause.svg);
+}
+
+.player .playToggle.error {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #f5adad, #b80b0b, #dc7d7d);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #f5adad, #b80b0b, #dc7d7d);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #f5adad, #b80b0b, #dc7d7d);
+    background-image: -o-radial-gradient(circle, #f5adad, #b80b0b, #dc7d7d);
+    background-repeat: no-repeat;
+}
+
+.player .playToggle.error:hover {
+    box-shadow: inset 3px 5px 2px #911212;
+}
+
+.player .playToggle.error .icon {
+    background-image: url(../images/svg/error.svg);
+    width: 60%;
+    left: 6px;
+}
+
+.recorder {
+    height: 60px;
+    width: 60px;
+    position: absolute;
+    /* For the volume ring */
+    /* For the pulsating red dot */
+    /* Firefox */
+    /* Safari and Chrome */
+}
+
+.recorder .recordToggle {
+    position: absolute;
+    border: 0 none;
+    outline: none;
+    top: 9px;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -o-radial-gradient(circle, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-repeat: no-repeat;
+}
+
+.recorder .recordToggle:disabled {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-image: -o-radial-gradient(circle, #e2e2e2, #6e6e6e, #e2e2e2);
+    background-repeat: no-repeat;
+    cursor: default;
+    opacity: 0.3;
+}
+
+.recorder .recordToggle:hover {
+    box-shadow: inset 3px 5px 2px #555555;
+}
+
+.recorder .recordToggle:disabled:hover {
+    box-shadow: none;
+}
+
+.recorder .recordToggle .icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 10%;
+    left: 22%;
+    background: url(../images/svg/mic.svg) no-repeat;
+    background-size: 55%;
+}
+
+.recorder .recordToggle.noPermission .icon {
+    background-image: url(../images/svg/mic_disabled.svg);
+}
+
+.recorder .canvas {
+    position: absolute;
+    border: 0 none;
+    top: 0;
+    left: 2px;
+    width: 67px;
+    height: 67px;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0.0;
+    }
+    25% {
+        opacity: 1.0;
+    }
+    75% {
+        opacity: 1.0;
+    }
+    100% {
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes fadeInOut {
+    from {
+        opacity: 0.0;
+    }
+    25% {
+        opacity: 1.0;
+    }
+    75% {
+        opacity: 1.0;
+    }
+    to {
+        opacity: 0.0;
+    }
+}
+
+@keyframes redPulse {
+    0% {
+        background-color: #631e0b;
+        box-shadow: 0 0 9px #333;
+    }
+    50% {
+        background-color: #fa3d08;
+        box-shadow: 0 0 22px #fa3d08;
+    }
+    100% {
+        background-color: #631e0b;
+        box-shadow: 0 0 9px #333;
+    }
+}
+
+@-webkit-keyframes redPulse {
+    from {
+        background-color: #631e0b;
+        box-shadow: 0 0 9px #333;
+    }
+    50% {
+        background-color: #fa3d08;
+        box-shadow: 0 0 18px #fa3d08;
+    }
+    to {
+        background-color: #631e0b;
+        box-shadow: 0 0 9px #333;
+    }
+}
+
+.recorder .pulse {
+    position: absolute;
+    bottom: 15%;
+    width: 20%;
+    height: 20%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    left: 25px;
+    -webkit-animation: redPulse 1s infinite, fadeInOut 2s 1;
+    animation: redPulse 1s infinite, fadeInOut 2s 1;
+}
+
+.recorder .pulse.off {
+    background-color: #6a1b03;
+    box-shadow: none;
+    -webkit-animation: none;
+    animation: none;
+}
+
+/* There are 2 'themes' defined here.
+   They can be applied by adding the `user` or `model` class
+   to the visual component container.
+*/
+.user .player .handle,
+.user .player .playToggle,
+.user .recorder .recordToggle {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
+    background-image: -o-radial-gradient(circle, #dee9f3, #5581b2, #dee9f3);
+    background-repeat: no-repeat;
+}
+
+.user .player .handle:hover,
+.user .player .playToggle:hover,
+.user .recorder .recordToggle:hover,
+.user .player .handleactive,
+.user .player .playToggleactive,
+.user .recorder .recordToggleactive {
+    box-shadow: inset 3px 5px 2px #426892;
+}
+
+.user .player .handle:disabled:hover,
+.user .player .playToggle:disabled:hover,
+.user .recorder .recordToggle:disabled:hover {
+    box-shadow: none;
+}
+
+.model .player .handle,
+.model .player .playToggle,
+.model .recorder .recordToggle {
+    /* gradient position, gradient shape and size, from, to */
+    background-image: radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
+    background-image: -webkit-radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
+    background-image: -moz-radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
+    background-image: -o-radial-gradient(circle, #e6e9c2, #7c842d, #e6e9c2);
+    background-repeat: no-repeat;
+}
+
+.model .player .handle:hover,
+.model .player .playToggle:hover,
+.model .recorder .recordToggle:hover,
+.model .player .handleactive,
+.model .player .playToggleactive,
+.model .recorder .recordToggleactive {
+    box-shadow: inset 3px 5px 2px #585e20;
+}
+
+.model .player .handle:disabled:hover,
+.model .player .playToggle:disabled:hover,
+.model .recorder .recordToggle:disabled:hover {
+    box-shadow: none;
+}
+
+/* The `user` or `model` class should also be applied within in the
+   SegmentPlayer, where there's a mix of `user/model` content.
+*/
+.user .player .loading,
+.loading.user {
+    background-color: #5581b2;
+    background-image: -moz-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dee9f3), to(#5581b2));
+    background-image: -webkit-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -o-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: linear-gradient(to bottom, #dee9f3, #5581b2);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdee9f3', endColorstr='#ff5581b2', GradientType=0);
+}
+
+.model .player .loading,
+.loading.model {
+    background-color: #7c842d;
+    background-image: -moz-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e6e9c2), to(#7c842d));
+    background-image: -webkit-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -o-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: linear-gradient(to bottom, #e6e9c2, #7c842d);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e9c2', endColorstr='#ff7c842d', GradientType=0);
+}
+
+.segment.user {
+    opacity: 0.4;
+    background-color: #5581b2;
+    background-image: -moz-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dee9f3), to(#5581b2));
+    background-image: -webkit-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: -o-linear-gradient(top, #dee9f3, #5581b2);
+    background-image: linear-gradient(to bottom, #dee9f3, #5581b2);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdee9f3', endColorstr='#ff5581b2', GradientType=0);
+}
+
+.segment.model {
+    opacity: 0.4;
+    background-color: #7c842d;
+    background-image: -moz-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e6e9c2), to(#7c842d));
+    background-image: -webkit-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: -o-linear-gradient(top, #e6e9c2, #7c842d);
+    background-image: linear-gradient(to bottom, #e6e9c2, #7c842d);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e9c2', endColorstr='#ff7c842d', GradientType=0);
+}
+
+.drop {
+    width: 100px;
+    height: 100px;
+}
+
+.drop.user {
+    background-color: #dee9f3;
+}
+
+.drop.model {
+    background-color: #e6e9c2;
+}
+
+.colouredSentence {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.colouredSentence .good {
+    color: #39972c;
+}
+
+.colouredSentence .moderate {
+    color: #f19020;
+    text-decoration: underline;
+}
+
+.colouredSentence .bad {
+    color: #c00817;
+    text-decoration: line-through;
+}
+
+.colouredSentence .punctuation {
+    color: #39972c;
+}
+
+.detailedScores td.good {
+    color: #39972c;
+}
+
+.detailedScores td.moderate {
+    color: #f19020;
+}
+
+.detailedScores td.bad {
+    color: #c00817;
+}

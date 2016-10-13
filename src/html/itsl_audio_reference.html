@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ITSLanguage SDK audio demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="../css/itsl_audio_components.css"/>
+  </head>
+  <body>
+    <p>Default audio player with no audio loaded. Shows a disabled state.</p>
+    <div id="player0" class="defaultPlayer"></div>
+
+    <p>Default audio player with a pre-generated Wave file as content. By definition, it's preloaded.</p>
+    <div id="player" class="defaultPlayer"></div>
+
+    <p>Default audio player with an unavailable file as content. It shows an error state.</p>
+    <div id="player1" class="defaultPlayer"></div>
+
+    <p>
+      Default audio player with an external Ogg/Opus file as content. Preloading is disabled.
+      Style 'user' is applied.
+    </p>
+    <div id="player2" class="defaultPlayer user"></div>
+
+    <div id="player2reset">Click to reset player's audio source.</div>
+    <div id="player2load">Click to load player's audio source.</div>
+
+    <p>
+      Mini audio player with an external Wav file as content. Preloading is enabled by default.
+      Style 'model' is applied.
+    </p>
+    <div id="player3" class="defaultPlayer model"></div>
+
+    <p>
+      Default audio player that is connected to the same audio source as the above mini audio player.
+      Any amount of GUIs are synced to one audio source.
+    </p>
+    <div id="player4" class="defaultPlayer"></div>
+
+    <div id="player3reset">Click to reset player's audio source.</div>
+
+    <p>
+      Segment audio player with multiple underlying audio files of multiple formats.
+      Preloading the first segment is enabled by default.
+    </p>
+    <div id="player5" class="defaultPlayer"></div>
+
+    <p>
+      Mini Segment audio player with multiple underlying audio files of multiple formats.
+      Preloading the first segment is enabled by default.
+      Style 'user' is applied.
+    </p>
+    <div id="player6" class="defaultPlayer user"></div>
+
+    <p>
+      Mini Segment audio player. Audio preloading is prohibited until playback is requested by user.
+      Style 'model' is applied.
+    </p>
+    <div id="player7" class="defaultPlayer model"></div>
+
+    <p>
+      Default audio recorder.
+      Style 'user' is applied.
+    </p>
+    <div id="recorder" class="defaultRecorder user"></div>
+
+    <!--
+			<p>Default audio recorder. Style 'user' is applied.</p>
+			<div id="recorder2" class="defaultRecorder user"></div>
+		-->
+
+    <script src="../js/itsl_audio_reference/bundle.js"></script>
+  </body>
+</html>
