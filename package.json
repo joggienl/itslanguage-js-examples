@@ -16,7 +16,7 @@
     "url": "https://github.com/itslanguage/itslanguage-js-examples/issues"
   },
   "homepage": "https://github.com/itslanguage/itslanguage-js-examples#readme",
-  "devDependencies": {
+  "dependencies": {
     "bootstrap": "^3.3.7"
   }
 }
