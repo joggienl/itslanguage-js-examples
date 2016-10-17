@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/itslanguage/itslanguage-js-examples#readme",
   "devDependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.3.7"
   }
 }
