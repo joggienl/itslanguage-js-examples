@@ -1,3 +1,6 @@
+require('./textual-components.css');
+
+
 class ColouredSentence {
   /**
    * ITSLanguage ColouredSentence capable of working with segments.

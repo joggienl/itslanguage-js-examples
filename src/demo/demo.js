@@ -1,5 +1,9 @@
 'use strict';
 
+require('./demo.css');
+const Raven = require('raven-js');
+const its = require('itslanguage');
+
 /* eslint-disable
  no-alert,
  no-unused-vars
@@ -23,7 +27,6 @@ console.log = function(l) {
   }
 };
 
-var its = require('itslanguage');
 var textcomps = require('../components/textual-components');
 var uicomps = require('../components/audio-components');
 

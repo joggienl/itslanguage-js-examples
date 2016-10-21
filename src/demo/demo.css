@@ -1,3 +1,5 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+
 .navbar-brand > img {
     margin-top: -13px;
     max-height: 45px;
