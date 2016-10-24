@@ -3,6 +3,7 @@
  no-unused-vars
  */
 
+require('./audio-components.css');
 const guid = require('guid');
 const Tools = require('itslanguage').Tools;
 
