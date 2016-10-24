@@ -37,39 +37,37 @@ class BaseSegmentPlayer {
 
     this.events = {};
 
-    var self = this;
-    this.addEventListener = function(name, handler) {
-      if (self.events.hasOwnProperty(name)) {
-        self.events[name].push(handler);
+    this.addEventListener = (name, handler) => {
+      if (this.events.hasOwnProperty(name)) {
+        this.events[name].push(handler);
       } else {
-        self.events[name] = [handler];
+        this.events[name] = [handler];
       }
     };
-    this.removeEventListener = function(name, handler) {
+    this.removeEventListener = (name, handler) => {
       /* This is a bit tricky, because how would you identify functions?
        This simple solution should work if you pass THE SAME handler. */
-      if (!self.events.hasOwnProperty(name)) {
+      if (!this.events.hasOwnProperty(name)) {
         return;
       }
 
-      var index = self.events[name].indexOf(handler);
+      const index = self.events[name].indexOf(handler);
       if (index !== -1) {
         self.events[name].splice(index, 1);
       }
     };
 
-    this._fireEvent = function(name, args) {
-      if (!self.events.hasOwnProperty(name)) {
+    this._fireEvent = (name, args) => {
+      if (!this.events.hasOwnProperty(name)) {
         return;
       }
       if (!args || !args.length) {
         args = [];
       }
 
-      var evs = self.events[name];
-      evs.forEach(function(ev) {
-        ev.apply(null, args);
-      });
+      for (const ev of self.events[name]) {
+        ev(...args);
+      }
     };
   }
 
@@ -99,50 +97,49 @@ class BaseSegmentPlayer {
       throw new Error(
         'There are no more players, index out of bounds');
     }
-    var self = this;
 
-    this.player.addEventListener('playing', function() {
-      self._setPlaying();
-      self._startPollingForPosition(self.settings.pollFreq);
-      self._fireEvent('playing', []);
+    this.player.addEventListener('playing', () => {
+      this._setPlaying();
+      this._startPollingForPosition(this.settings.pollFreq);
+      this._fireEvent('playing', []);
     });
-    this.player.addEventListener('timeupdate', function() {
-      self._getNextSegmentReady();
+    this.player.addEventListener('timeupdate', () => {
+      this._getNextSegmentReady();
     });
-    this.player.addEventListener('canplay', function() {
-      self._setPlayable();
+    this.player.addEventListener('canplay', () => {
+      this._setPlayable();
     });
     // The `canplay` event may have been fired already when the audio
     // player was already initialised. Call _setPlayable() in that case.
     if (this.player.canPlay()) {
-      self._setPlayable();
+      this._setPlayable();
     }
-    this.player.addEventListener('ended', function() {
-      if (self.players.length === (self.currentSegment + 1)) {
+    this.player.addEventListener('ended', () => {
+      if (this.players.length === this.currentSegment + 1) {
         // This is the last of all segments.
-        self._setNotPlaying();
-        self._stopPollingForPosition();
-        self.currentSegment = null;
-        self._nextSegment();
-        self._fireEvent('ended', []);
+        this._setNotPlaying();
+        this._stopPollingForPosition();
+        this.currentSegment = null;
+        this._nextSegment();
+        this._fireEvent('ended', []);
       } else {
         // Advance into the next segment.
-        self._nextSegment();
-        self.player.play(0);
+        this._nextSegment();
+        this.player.play(0);
       }
     });
-    this.player.addEventListener('pause', function() {
-      self._setNotPlaying();
-      self._stopPollingForPosition();
-      self._fireEvent('pause', []);
+    this.player.addEventListener('pause', () => {
+      this._setNotPlaying();
+      this._stopPollingForPosition();
+      this._fireEvent('pause', []);
     });
     // this.player.addEventListener('progress', function() {
-    // self._loadingUpdate();
+    // this._loadingUpdate();
     // });
     // // In case the event was already fired, try to update audio stats.
-    // self._loadingUpdate();
-    this.player.addEventListener('error', function() {
-      self._setError();
+    // this._loadingUpdate();
+    this.player.addEventListener('error', () => {
+      this._setError();
     });
   }
 
@@ -151,10 +148,10 @@ class BaseSegmentPlayer {
    * only x seconds or less of play time remaining.
    */
   _getNextSegmentReady() {
-    var remainingSeconds = this.player.getDuration() -
+    const remainingSeconds = this.player.getDuration() -
       this.player.getCurrentTime();
     if (remainingSeconds <= this.settings.loadNextSegment) {
-      var nextSegment = this.players[this.currentSegment + 1];
+      const nextSegment = this.players[this.currentSegment + 1];
       if (nextSegment !== undefined) {
         nextSegment.preload();
       }
@@ -206,25 +203,23 @@ class SegmentPlayer extends BaseSegmentPlayer {
         'Lists players and origins need to be of equal length');
     }
 
-    var self = this;
-    this.players.forEach(function(player, i) {
-      var duration = player.getDuration();
+    this.players.forEach((player, i) => {
+      const duration = player.getDuration();
       if (duration) {
-        self.durations[i] = duration;
+        this.durations[i] = duration;
       }
     });
 
     this.totalDuration = 0;
-    this.durations.forEach(function(duration, i) {
+    this.durations.forEach((duration, i) => {
       if (typeof duration !== 'number') {
         throw new Error(
           'All durations need to be known in advance. Segment index ' + i +
           ' has no duration specified. Either specify or make sure at ' +
           'least the metadata of the audio has been loaded already.');
       }
-      self.totalDuration += duration;
-      console.log('Player ' + i +
-        'duration: ' + duration + '. Total so far: ' + self.totalDuration);
+      this.totalDuration += duration;
+      console.log('Player ', i, 'duration: ', duration, '. Total so far: ', this.totalDuration);
     });
 
     this._writeUI(this.settings.element);
@@ -241,15 +236,14 @@ class SegmentPlayer extends BaseSegmentPlayer {
     // Call super
     super._nextSegment(index);
 
-    var self = this;
-    this.player.addEventListener('timeupdate', function() {
-      self._getTimeUpdate();
+    this.player.addEventListener('timeupdate', () => {
+      this._getTimeUpdate();
     });
-    this.player.addEventListener('progress', function() {
-      self._loadingUpdate();
+    this.player.addEventListener('progress', () => {
+      this._loadingUpdate();
     });
     // In case the event was already fired, try to update audio stats.
-    self._loadingUpdate();
+    this._loadingUpdate();
   }
 
   /**
@@ -279,32 +273,33 @@ class SegmentPlayer extends BaseSegmentPlayer {
   _writeUI(ui) {
     ui.innerHTML = this._getUI();
 
-    var id = this.playerId;
+    const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');
     this.range = document.getElementById(id + 'range');
     this.loading = document.getElementById(id + 'loading');
     this.dragger = document.getElementById(id + 'dragger');
     this.timeindication = document.getElementById(id + 'timeindication');
 
-    var self = this;
-    this.playtoggle.onclick = function() {
-      self.player.togglePlayback();
+    this.playtoggle.onclick = () => {
+      this.player.togglePlayback();
     };
 
     function onDrag(globalPct) {
       // Update the playing time as it would be playing once the user
       // would release the dragger.
-      self._timeUpdate(globalPct);
-      self._updatePositionIndication(globalPct);
+      this._timeUpdate(globalPct);
+      this._updatePositionIndication(globalPct);
     }
+
+    const self = this;
 
     function onDragEnd(globalPct) {
       // Start playing audio at the new position now the dragger has
       // been released.
-      var object = self._fromGlobalPercentage(globalPct);
-      var pct = object[0];
-      var segmentIndex = object[1];
-      var wasPlaying = self.player.isPlaying();
+      const object = self._fromGlobalPercentage(globalPct);
+      const pct = object[0];
+      const segmentIndex = object[1];
+      const wasPlaying = self.player.isPlaying();
       if (segmentIndex !== self.currentSegment) {
         // Scrubbed to another segment.
         // Stop playing (if we were).
@@ -331,31 +326,31 @@ class SegmentPlayer extends BaseSegmentPlayer {
    *   the position stays within the currently loaded segment, this Audio segment index is provided as second element.
    */
   _fromGlobalPercentage(pct) {
-    var secondsInGlobal = (this.totalDuration * pct) / 100;
-    var localPct = null;
-    var segmentIndex = null;
-    this.durations.some(function(duration, i) {
+    let secondsInGlobal = this.totalDuration * pct / 100;
+    let localPct = null;
+    let segmentIndex = null;
+    this.durations.some((duration, i) => {
       if (secondsInGlobal > duration) {
         // Not scrubbed in this segment.
         secondsInGlobal -= duration;
       } else {
         // Scrubbing within this segment.
         segmentIndex = i;
-        localPct = (secondsInGlobal / duration) * 100;
+        localPct = secondsInGlobal / duration * 100;
         // Exit the loop
         return true;
       }
     });
     console.log('Scrubbing to ' + localPct + '% of segment index: ' +
       segmentIndex);
-    return ([localPct, segmentIndex]);
+    return [localPct, segmentIndex];
   }
 
   /**
    * Update the loading bar to reflect the actual buffer fill.
    */
   _loadingUpdate() {
-    var loaded = this.player.getBufferFill();
+    const loaded = this.player.getBufferFill();
     this.loading.style.width = loaded + '%';
   }
 
@@ -365,34 +360,31 @@ class SegmentPlayer extends BaseSegmentPlayer {
    *
    */
   _getUI() {
-    var id = this.playerId = guid.create();
+    const id = this.playerId = guid.create();
 
-    var segments = '';
-    var self = this;
-    this.durations.forEach(function(duration, i) {
-      var pct = (duration * 100) / self.totalDuration;
-      segments += '<span id="' + id + 'segment" class="segment ' + self.origins[i] +
-        '" style="width: ' + pct + '%">' +
-        '<span id="' + id + 'loading" class="loading ' + self.origins[i] +
-        '" style="width: 0%"></span>' +
-        '</span>';
+    let segments = '';
+    const self = this;
+    this.durations.forEach((duration, i) => {
+      const pct = duration * 100 / self.totalDuration;
+      segments += `
+        <span id="${id}segment" class="segment ${self.origins[i]}" style="width: ${pct}%">
+          <span id="${id}loading" class="loading ${self.origins[i]}" style="width: 0"></span>
+        </span>`;
     });
 
-    return '<p class="player">' +
-      // Play button container class
-      '<button id="' + id + 'playtoggle" class="playToggle"' +
-      ' disabled>' +
-      // Play icon
-      '<div class="icon"></div>' +
-      '</button>' +
-      '<span id="' + id + 'range" class="gutter">' +
-      segments +
-      '<button id="' + id + 'dragger" class="handle"' +
-      ' disabled></button>' +
-      '</span>' +
-      '<span id="' + id + 'timeindication" class="timeindication">' +
-      '</span>' +
-      '</p>';
+    return `
+      <p class="player">
+        <!-- Play button container class -->
+        <button id="${id}playtoggle" class="playToggle" disabled>' +
+          <!-- Play icon -->
+          <div class="icon"></div>
+        </button>
+        <span id="${id}range" class="gutter">
+          ${segments}
+          <button id="${id}dragger" class="handle" disabled></button>
+        </span>
+        <span id="${id}timeindication" class="timeindication"></span>
+      '</p>`;
   }
 
   /**
@@ -402,10 +394,9 @@ class SegmentPlayer extends BaseSegmentPlayer {
    * @returns {number} The position in seconds on the whole duration of all audio stream segments combined.
    */
   _toGlobalSeconds(seconds) {
-    var secondsInGlobal = seconds;
-    var self = this;
-    for (var i = 0; i < this.currentSegment; i++) {
-      secondsInGlobal += self.durations[i];
+    let secondsInGlobal = seconds;
+    for (let i = 0; i < this.currentSegment; i++) {
+      secondsInGlobal += this.durations[i];
     }
     return secondsInGlobal;
   }
@@ -419,15 +410,14 @@ class SegmentPlayer extends BaseSegmentPlayer {
    *   time.
    */
   _timeUpdate(pct) {
-    var past = null;
+    let past = null;
     if (pct !== undefined) {
       // Display time while seeking, not currentTime in audio.
-      past = (this.totalDuration * pct) / 100;
+      past = this.totalDuration * pct / 100;
     } else {
       past = this._toGlobalSeconds(this.player.getCurrentTime());
     }
-    var text = this._timerText(past) + ' / ' +
-      this._timerText(this.totalDuration);
+    const text = this._timerText(past) + ' / ' + this._timerText(this.totalDuration);
     this._updateTimeIndication(text);
   }
 
@@ -437,11 +427,10 @@ class SegmentPlayer extends BaseSegmentPlayer {
    * Also update the GUI with this new position indication.
    */
   _positionUpdate() {
-    var pct = (this.player.getCurrentTime() * 100) / this.player.getDuration();
+    const pct = this.player.getCurrentTime() * 100 / this.player.getDuration();
 
-    var globalPct = this._toGlobalPercentage(pct);
-    console.debug('Updating positionIndication to: ' + globalPct +
-      '% (In segment: ' + pct + '%)');
+    const globalPct = this._toGlobalPercentage(pct);
+    console.debug('Updating positionIndication to: ', globalPct, '% (In segment: ', pct, '%)');
 
     this._updatePositionIndication(globalPct);
   }
@@ -462,12 +451,11 @@ class SegmentPlayer extends BaseSegmentPlayer {
    * @returns {number} The completion percentage (1..100) of all audio stream segments combined.
    */
   _toGlobalPercentage(pct) {
-    var secondsInGlobal = (this.player.getDuration() * pct) / 100;
-    var self = this;
-    for (var i = 0; i < this.currentSegment; i++) {
-      secondsInGlobal += self.durations[i];
+    let secondsInGlobal = this.player.getDuration() * pct / 100;
+    for (let i = 0; i < this.currentSegment; i++) {
+      secondsInGlobal += this.durations[i];
     }
-    return (secondsInGlobal / this.totalDuration) * 100;
+    return secondsInGlobal / this.totalDuration * 100;
   }
 }
 
@@ -479,8 +467,7 @@ class SegmentPlayer extends BaseSegmentPlayer {
  * @param {callback} onDrag Called while dragging.
  * @param {callback} onDragEnd Called when dragging action completed.
  */
-SegmentPlayer.prototype._applyRangeSlider =
-  Player.prototype._applyRangeSlider;
+SegmentPlayer.prototype._applyRangeSlider = Player.prototype._applyRangeSlider;
 
 /**
  * Return a formatted time given a high precision second count.
@@ -488,16 +475,14 @@ SegmentPlayer.prototype._applyRangeSlider =
  * @param {number} [seconds] Any number of seconds. Use float for high accuracy output.
  * @returns A duration in the form of mm:ss.nn (minutes, seconds, milliseconds).
  */
-SegmentPlayer.prototype._timerText =
-  Player._timerText;
+SegmentPlayer.prototype._timerText = Player._timerText;
 
 /**
  * Update the dragger position.
  *
  * @param {number} pct The completed percentage (1..100) of all audio stream segments combined.
  */
-SegmentPlayer.prototype._updatePositionIndication =
-  Player.prototype._updatePositionIndication;
+SegmentPlayer.prototype._updatePositionIndication = Player.prototype._updatePositionIndication;
 
 /**
  * Start polling frequently for the current playing time of the audio.
@@ -534,17 +519,16 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
    *
    */
   _getUI() {
-    var id = this.playerId = guid.create();
-    var player =
-      // Container as play area.
-      '<p class="player">' +
-      // Play button container class
-      '<button id="' + id + 'playtoggle" class="playToggle"' +
-      ' disabled>' +
-      // Play icon
-      '<div class="icon"></div>' +
-      '</button>' +
-      '</p>';
+    const id = this.playerId = guid.create();
+    const player = `
+      <!-- Container as play area. -->
+      <p class="player">
+        <!-- Play button container class -->
+        <button id="${id}playtoggle" class="playToggle" disabled>
+          <!-- Play icon -->
+          <div class="icon"></div>
+        </button>
+      </p>`;
     return player;
   }
 
@@ -556,18 +540,17 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
   _writeUI(ui) {
     ui.innerHTML = this._getUI();
 
-    var id = this.playerId;
+    const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');
 
-    var self = this;
-    this.playtoggle.onclick = function() {
-      self.player.togglePlayback();
+    this.playtoggle.onclick = () => {
+      this.player.togglePlayback();
     };
   }
 }
 
 module.exports = {
-  BaseSegmentPlayer: BaseSegmentPlayer,
-  MiniSegmentPlayer: MiniSegmentPlayer,
-  SegmentPlayer: SegmentPlayer
+  BaseSegmentPlayer,
+  MiniSegmentPlayer,
+  SegmentPlayer
 };

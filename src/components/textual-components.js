@@ -21,10 +21,9 @@ class ColouredSentence {
   show(words) {
     // Empty the element, in case any previous sentences were shown.
     this.settings.element.innerHTML = '';
-    var self = this;
-    words.forEach(function(word) {
-      word.chunks.forEach(function(chunk) {
-        var newElement = document.createElement('span');
+    for (const word of words) {
+      for (const chunk of word.chunks) {
+        const newElement = document.createElement('span');
         newElement.innerHTML = chunk.graphemes;
         if (chunk.verdict === 'good') {
           newElement.className = 'good';
@@ -35,15 +34,15 @@ class ColouredSentence {
         } else {
           newElement.className = 'punctuation';
         }
-        chunk.phonemes.forEach(function(phoneme) {
+        for (const phoneme of chunk.phonemes) {
           newElement.setAttribute('title', phoneme.confidenceScore);
-        });
-        self.settings.element.appendChild(newElement);
-      });
-      var newElement = document.createElement('span');
+        }
+        this.settings.element.appendChild(newElement);
+      }
+      const newElement = document.createElement('span');
       newElement.innerHTML = ' ';
-      self.settings.element.appendChild(newElement);
-    });
+      this.settings.element.appendChild(newElement);
+    }
   }
 
   /**
@@ -51,16 +50,14 @@ class ColouredSentence {
    */
   reset() {
     // Get a collection of DOM elements as NodeList.
-    var spans = this.settings.element.querySelectorAll('span');
-    // Convert to iterable array.
-    spans = [].slice.call(spans);
+    const spans = this.settings.element.querySelectorAll('span');
     // Remove all markup classes.
-    spans.forEach(function(span) {
+    for (const span of spans) {
       span.classList.remove('good');
       span.classList.remove('moderate');
       span.classList.remove('bad');
       span.classList.remove('punctuation');
-    });
+    }
   }
 }
 
@@ -102,28 +99,27 @@ class DetailedScores {
   show(words, refWords) {
     // Empty the element, in case any previous sentences were shown.
     this.settings.element.innerHTML = '';
-    var self = this;
-    var table = document.createElement('table');
+    const table = document.createElement('table');
 
     // Assemble header
-    var row = document.createElement('tr');
-    var column1 = document.createElement('th');
+    let row = document.createElement('tr');
+    let column1 = document.createElement('th');
     column1.innerText = 'Grapheme (IPA)';
     row.appendChild(column1);
-    var column2 = document.createElement('th');
+    let column2 = document.createElement('th');
     column2.innerText = 'Confidence Score';
     row.appendChild(column2);
-    var column3 = document.createElement('th');
+    let column3 = document.createElement('th');
     column3.innerText = 'Duration';
     row.appendChild(column3);
     table.appendChild(row);
 
-    var lastEnd = 0;
-    words.forEach(function(word, i) {
-      word.chunks.forEach(function(chunk, j) {
-        chunk.phonemes.forEach(function(phoneme, k) {
-          var refPhoneme = refWords[i].chunks[j].phonemes[k];
-          var refDuration = refPhoneme.end - refPhoneme.start;
+    let lastEnd = 0;
+    words.forEach((word, i) => {
+      word.chunks.forEach((chunk, j) => {
+        chunk.phonemes.forEach((phoneme, k) => {
+          const refPhoneme = refWords[i].chunks[j].phonemes[k];
+          const refDuration = refPhoneme.end - refPhoneme.start;
 
           // Insert silence
           if (lastEnd !== phoneme.start) {
@@ -134,8 +130,8 @@ class DetailedScores {
             column2 = document.createElement('td');
             row.appendChild(column2);
             column3 = document.createElement('td');
-            var silDuration = phoneme.start - lastEnd;
-            column3.innerHTML = silDuration.toFixed(2) + 's (ref ' + refDuration.toFixed(2) + 's)';
+            const silDuration = phoneme.start - lastEnd;
+            column3.innerHTML = `${silDuration.toFixed(2)}s (ref ${refDuration.toFixed(2)}s)`;
             row.appendChild(column3);
             table.appendChild(row);
           }
@@ -143,10 +139,10 @@ class DetailedScores {
           row = document.createElement('tr');
           column1 = document.createElement('td');
           column1.innerHTML = chunk.graphemes + '(' + phoneme.ipa + ')';
-          if (self.settings.thresholdGood && self.settings.thresholdBad) {
-            if (phoneme.confidenceScore >= self.settings.thresholdGood) {
+          if (this.settings.thresholdGood && this.settings.thresholdBad) {
+            if (phoneme.confidenceScore >= this.settings.thresholdGood) {
               column1.classList.add('good');
-            } else if (phoneme.confidenceScore <= self.settings.thresholdBad) {
+            } else if (phoneme.confidenceScore <= this.settings.thresholdBad) {
               column1.classList.add('bad');
             } else {
               column1.classList.add('moderate');
@@ -157,8 +153,8 @@ class DetailedScores {
           column2.innerHTML = phoneme.confidenceScore;
           row.appendChild(column2);
           column3 = document.createElement('td');
-          var duration = phoneme.end - phoneme.start;
-          column3.innerHTML = duration.toFixed(2) + 's (ref ' + refDuration.toFixed(2) + 's)';
+          const duration = phoneme.end - phoneme.start;
+          column3.innerHTML = `${duration.toFixed(2)}s (ref ${refDuration.toFixed(2)}s)`;
           row.appendChild(column3);
           table.appendChild(row);
 
@@ -166,7 +162,7 @@ class DetailedScores {
         });
       });
     });
-    self.settings.element.appendChild(table);
+    this.settings.element.appendChild(table);
   }
 
   /**
@@ -178,6 +174,6 @@ class DetailedScores {
 }
 
 module.exports = {
-  ColouredSentence: ColouredSentence,
-  DetailedScores: DetailedScores
+  ColouredSentence,
+  DetailedScores
 };

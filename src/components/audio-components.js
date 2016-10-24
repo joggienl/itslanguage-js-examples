@@ -38,21 +38,21 @@ class Player {
     this._writeUI(this.settings.element);
 
     this.player = this.settings.player;
-    var self = this;
+    const self = this;
 
-    this.player.addEventListener('playing', function() {
+    this.player.addEventListener('playing', () => {
       self._setPlaying();
       self._startPollingForPosition(self.settings.pollFreq);
     });
-    this.player.addEventListener('timeupdate', function() {
+    this.player.addEventListener('timeupdate', () => {
       self._getTimeUpdate();
     });
     // In case the event was already fired, try to update audio stats.
     this._timeUpdate();
-    this.player.addEventListener('durationchange', function() {
+    this.player.addEventListener('durationchange', () => {
       self._timeUpdate();
     });
-    this.player.addEventListener('canplay', function() {
+    this.player.addEventListener('canplay', () => {
       self._setPlayable();
     });
     // The `canplay` event may have been fired already when the audio
@@ -60,22 +60,22 @@ class Player {
     if (this.player.canPlay()) {
       self._setPlayable();
     }
-    this.player.addEventListener('ended', function() {
+    this.player.addEventListener('ended', () => {
       self._setNotPlaying();
       self._stopPollingForPosition();
     });
-    this.player.addEventListener('pause', function() {
+    this.player.addEventListener('pause', () => {
       self._setNotPlaying();
       self._stopPollingForPosition();
     });
-    this.player.addEventListener('progress', function() {
+    this.player.addEventListener('progress', () => {
       self._loadingUpdate();
     });
-    this.player.addEventListener('error', function() {
+    this.player.addEventListener('error', () => {
       self._stopPollingForPosition();
       self._setError();
     });
-    this.player.addEventListener('unloaded', function() {
+    this.player.addEventListener('unloaded', () => {
       self._stopPollingForPosition();
       self._setNotPlayable();
       // Sets the time to 0:00.0 / 0:00.0 when no audio is loaded.
@@ -94,32 +94,32 @@ class Player {
    * @param {callback} onDragEnd Called when dragging action completed.
    */
   _applyRangeSlider(range, dragger, onDrag, onDragEnd) {
-    var draggerWidth = parseInt(getComputedStyle(dragger).width);
+    const draggerWidth = parseInt(getComputedStyle(dragger).width);
     this.draggerDown = false;
 
     dragger.style.width = draggerWidth + 'px';
     dragger.style.left = -draggerWidth + 'px';
-    dragger.style.marginLeft = (draggerWidth / 2) + 'px';
-    var rangeWidth = parseInt(getComputedStyle(range).width);
-    var rangeLeft = _getPosition(range).x;
+    dragger.style.marginLeft = draggerWidth / 2 + 'px';
+    const rangeWidth = parseInt(getComputedStyle(range).width);
+    const rangeLeft = _getPosition(range).x;
 
     /* The mousedown event is bound to the range slider to pick up the user
      intent for dragging this slider. Then, mousemove and mouseup are bound
      to the document to follow the mouse outside the slider area.
      */
 
-    var self = this;
-    range.addEventListener('mousedown', function(e) {
+    const self = this;
+    range.addEventListener('mousedown', e => {
       self.draggerDown = true;
       updateDragger(e);
       return false;
     });
 
-    document.addEventListener('mousemove', function(e) {
+    document.addEventListener('mousemove', e => {
       updateDragger(e);
     });
 
-    document.addEventListener('mouseup', function(e) {
+    document.addEventListener('mouseup', e => {
       // This event fires on all slider instances listening on document
       // mousup, therefore stop executing if this slider was not the
       // one starting the drag.
@@ -140,12 +140,12 @@ class Player {
      * the parents and adding the offsets.
      */
     function _getPosition(element) {
-      var xPosition = 0;
-      var yPosition = 0;
+      let xPosition = 0;
+      let yPosition = 0;
 
       while (element) {
-        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+        xPosition += element.offsetLeft - element.scrollLeft + element.clientLeft;
+        yPosition += element.offsetTop - element.scrollTop + element.clientTop;
         element = element.offsetParent;
       }
       return {
@@ -155,14 +155,14 @@ class Player {
     }
 
     function getPostionAsPercentage(e) {
-      return Math.round(((e.pageX - rangeLeft) / rangeWidth) * 100);
+      return Math.round((e.pageX - rangeLeft) / rangeWidth * 100);
     }
 
     function updateDragger(e) {
       // Check if mouse is within acceptable range to react to
       if (self.draggerDown && e.pageX >= rangeLeft &&
-        e.pageX <= (rangeLeft + rangeWidth)) {
-        var pct = getPostionAsPercentage(e);
+        e.pageX <= rangeLeft + rangeWidth) {
+        const pct = getPostionAsPercentage(e);
         if (onDrag instanceof Function) {
           onDrag(pct);
         }
@@ -176,17 +176,17 @@ class Player {
    * @param {element} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    var playerContent = this._getUI();
+    const playerContent = this._getUI();
     ui.innerHTML = playerContent;
 
-    var id = this.playerId;
+    const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');
     this.range = document.getElementById(id + 'range');
     this.loading = document.getElementById(id + 'loading');
     this.dragger = document.getElementById(id + 'dragger');
     this.timeindication = document.getElementById(id + 'timeindication');
 
-    var self = this;
+    const self = this;
     this.playtoggle.onclick = function() {
       self.player.togglePlayback();
     };
@@ -211,7 +211,7 @@ class Player {
    * Update the loading bar to reflect the actual buffer fill.
    */
   _loadingUpdate() {
-    var loaded = this.player.getBufferFill();
+    const loaded = this.player.getBufferFill();
     this.loading.style.width = loaded + '%';
   }
 
@@ -221,24 +221,21 @@ class Player {
    *
    */
   _getUI() {
-    var id = this.playerId = guid.create();
-    var player =
-      // Container as play area.
-      '<p class="player">' +
-      // Play button container class
-      '<button id="' + id + 'playtoggle" class="playToggle"' +
-      ' disabled>' +
-      // Play icon
-      '<div class="icon"></div>' +
-      '</button>' +
-      '<span id="' + id + 'range" class="gutter">' +
-      '<span id="' + id + 'loading" class="loading"></span>' +
-      '<button id="' + id + 'dragger" class="handle"' +
-      ' disabled></button>' +
-      '</span>' +
-      '<span id="' + id + 'timeindication" class="timeindication">' +
-      '</span>' +
-      '</p>';
+    const id = this.playerId = guid.create();
+    const player = `
+      <!-- Container as play area. -->
+      <p class="player">
+        // Play button container class
+        <button id="${id}playtoggle" class="playToggle" disabled>
+          <!-- Play icon -->
+          <div class="icon"></div>
+        </button>
+        <span id="${id}range" class="gutter">
+        <span id="${id}loading" class="loading"></span>
+          <button id="${id}dragger" class="handle" disabled></button>
+        </span>
+        <span id="${id}timeindication" class="timeindication"></span>
+      </p>`;
     return player;
   }
 
@@ -249,9 +246,9 @@ class Player {
    * @returns A duration in the form of mm:ss.nn (minutes, seconds, partial seconds).
    */
   _timerText(seconds) {
-    var mins = Math.floor(seconds / 60, 10);
-    var secs = parseInt(seconds - mins * 60, 10);
-    var decimal = parseInt((seconds - mins * 60 - secs) * 10, 10);
+    const mins = Math.floor(seconds / 60, 10);
+    const secs = parseInt(seconds - mins * 60, 10);
+    const decimal = parseInt((seconds - mins * 60 - secs) * 10, 10);
     return mins + ':' + (secs < 10 ? '0' + secs : secs) + '.' + decimal;
   }
 
@@ -263,17 +260,16 @@ class Player {
    *   time.
    */
   _timeUpdate(pct) {
-    var duration = this.player.getDuration();
-    var offset = null;
+    const duration = this.player.getDuration();
+    let offset = null;
     if (pct !== undefined) {
       // Display time while seeking, not currentTime in audio.
-      offset = (duration * pct) / 100;
+      offset = duration * pct / 100;
     } else {
       offset = this.player.getCurrentTime();
     }
 
-    var text = this._timerText(offset) +
-      ' / ' + this._timerText(duration);
+    const text = this._timerText(offset) + ' / ' + this._timerText(duration);
     this._updateTimeIndication(text);
   }
 
@@ -283,12 +279,12 @@ class Player {
    * Also update the GUI with this new position indication.
    */
   _positionUpdate() {
-    var duration = this.player.getDuration();
-    var pos = 0;
+    const duration = this.player.getDuration();
+    let pos = 0;
     // Prevent division by zero errors when no audio is loaded
     // and duration is 0.
     if (duration > 0) {
-      pos = (this.player.getCurrentTime() * 100) / this.player.getDuration();
+      pos = this.player.getCurrentTime() * 100 / this.player.getDuration();
     }
     this._updatePositionIndication(pos);
   }
@@ -309,9 +305,9 @@ class Player {
    */
   _updatePositionIndication(pct) {
     // Due to the dragger having an offset to the range, compute px from %.
-    var rangeWidth = this.range.offsetWidth;
-    var draggerWidth = parseInt(getComputedStyle(this.dragger).width);
-    var left = ((rangeWidth * pct) / 100) - draggerWidth;
+    const rangeWidth = this.range.offsetWidth;
+    const draggerWidth = parseInt(getComputedStyle(this.dragger).width);
+    const left = rangeWidth * pct / 100 - draggerWidth;
     this.dragger.style.left = left + 'px';
   }
 
@@ -335,13 +331,13 @@ class Player {
    * @param {number} pollFreq The polling frequency in milliseconds.
    */
   _startPollingForPosition(pollFreq) {
-    var self = this;
+    const self = this;
     if (this.pollInterval || !pollFreq) {
       return;
     }
 
     console.log('Start polling for audio position.');
-    this.pollInterval = setInterval(function() {
+    this.pollInterval = setInterval(() => {
       self._getTimeUpdate();
     }, pollFreq);
   }
@@ -395,17 +391,16 @@ class MiniPlayer {
    *
    */
   _getUI() {
-    var id = this.playerId = guid.create();
-    var player =
-      // Container as play area.
-      '<p class="player">' +
-      // Play button container class
-      '<button id="' + id + 'playtoggle" class="playToggle"' +
-      ' disabled>' +
-      // Play icon
-      '<div class="icon"></div>' +
-      '</button>' +
-      '</p>';
+    const id = this.playerId = guid.create();
+    const player = `
+      <!-- Container as play area. -->
+      <p class="player">
+        <!-- Play button container class -->
+        <button id="${id}playtoggle" class="playToggle" disabled>
+          <!-- Play icon -->
+          <div class="icon"></div>
+        </button>
+      </p>`;
     return player;
   }
 
@@ -441,7 +436,7 @@ class VolumeCanvas {
       lineWidth: 5
     }, options);
 
-    var canvas = this.settings.canvas;
+    const canvas = this.settings.canvas;
     // Canvas sizes through width and height properties (non-CSS).
     // Grab the CSS values and apply them so we're able to determine size
     // through CSS.
@@ -462,28 +457,24 @@ class VolumeCanvas {
     this._initCanvas();
 
     // Scale degrees: 0 to 288.
-    var degrees = 288 * volume;
-    var radians = degrees * Math.PI / 180;
-    var maxAngle = this.settings.startAngle + radians;
+    const degrees = 288 * volume;
+    const radians = degrees * Math.PI / 180;
+    const maxAngle = this.settings.startAngle + radians;
     // Draw background arc
-    this._drawArc(1.0, this.settings.bgColour, this.settings.startAngle,
-      this.settings.endAngle);
+    this._drawArc(1.0, this.settings.bgColour, this.settings.startAngle, this.settings.endAngle);
 
-    var orangeStart = 1.5 * Math.PI;
-    var redStart = 1.9 * Math.PI;
+    const orangeStart = 1.5 * Math.PI;
+    const redStart = 1.9 * Math.PI;
     // Draw green part
-    this._drawArc(1.0, 'rgb(82, 240, 55)',
-      this.settings.startAngle, orangeStart, maxAngle);
+    this._drawArc(1.0, 'rgb(82, 240, 55)', this.settings.startAngle, orangeStart, maxAngle);
     // Draw orange part
-    this._drawArc(1.0, 'rgb(198, 111, 0)',
-      orangeStart, redStart, maxAngle);
+    this._drawArc(1.0, 'rgb(198, 111, 0)', orangeStart, redStart, maxAngle);
     // Draw red part
-    this._drawArc(1.0, 'rgb(255, 0, 0)',
-      redStart, this.settings.endAngle, maxAngle);
+    this._drawArc(1.0, 'rgb(255, 0, 0)', redStart, this.settings.endAngle, maxAngle);
   }
 
   _initCanvas() {
-    var ctx = this.ctx;
+    const ctx = this.ctx;
     // Clear the canvas everytime a chart is drawn
     ctx.clearRect(0, 0, this.W, this.H);
   }
@@ -510,15 +501,15 @@ class VolumeCanvas {
       endAngle = maxAngle;
     }
 
-    var ctx = this.ctx;
+    const ctx = this.ctx;
     ctx.beginPath();
     ctx.globalAlpha = alphaValue;
     ctx.strokeStyle = colour;
     ctx.lineWidth = this.settings.lineWidth;
-    var x = this.W / 2;
-    var y = this.H / 2;
-    var radius = (this.W / 2) - (this.settings.lineWidth / 2);
-    var counterClockwise = false;
+    const x = this.W / 2;
+    const y = this.H / 2;
+    const radius = this.W / 2 - this.settings.lineWidth / 2;
+    const counterClockwise = false;
     ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
     ctx.stroke();
   }
@@ -546,31 +537,30 @@ class Recorder extends Player {
       this._permitRecorder();
     }
     // .. or an event will trigger soon.
-    var self = this;
-    this.recorder.addEventListener('ready', function() {
-      self._permitRecorder();
+    this.recorder.addEventListener('ready', () => {
+      this._permitRecorder();
     });
 
-    this.stopwatch = new Tools.Stopwatch(function(elapsed) {
-      var seconds = elapsed / 10;
-      self._updateTimer(seconds);
-      if (self.settings.maxRecordingDuration &&
-        self.settings.maxRecordingDuration <= seconds) {
-        self.recorder.stop(true);
+    this.stopwatch = new Tools.Stopwatch(elapsed => {
+      const seconds = elapsed / 10;
+      this._updateTimer(seconds);
+      if (this.settings.maxRecordingDuration &&
+        this.settings.maxRecordingDuration <= seconds) {
+        this.recorder.stop(true);
       }
     });
-    this.recorder.addEventListener('recording', function(id) {
-      self.dot.classList.remove('off');
-      self.stopwatch.reset();
-      self.stopwatch.start();
+    this.recorder.addEventListener('recording', id => {
+      this.dot.classList.remove('off');
+      this.stopwatch.reset();
+      this.stopwatch.start();
     });
 
-    this.recorder.addEventListener('recorded', function(id, blob, forced) {
-      self.stopwatch.stop();
-      self.dot.classList.add('off');
+    this.recorder.addEventListener('recorded', (id, blob, forced) => {
+      this.stopwatch.stop();
+      this.dot.classList.add('off');
 
-      var blobUrl = window.URL.createObjectURL(blob);
-      self.player.load(blobUrl);
+      const blobUrl = window.URL.createObjectURL(blob);
+      this.player.load(blobUrl);
     });
 
     // The addEventListener interface exists on object.Element DOM elements.
@@ -581,37 +571,36 @@ class Recorder extends Player {
     // http://stackoverflow.com/questions/10978311/implementing-events-in-my-own-object
     this.events = {};
 
-    this.addEventListener = function(name, handler) {
-      if (self.events.hasOwnProperty(name)) {
-        self.events[name].push(handler);
+    this.addEventListener = (name, handler) => {
+      if (this.events.hasOwnProperty(name)) {
+        this.events[name].push(handler);
       } else {
-        self.events[name] = [handler];
+        this.events[name] = [handler];
       }
     };
 
-    this.removeEventListener = function(name, handler) {
-      if (!self.events.hasOwnProperty(name)) {
+    this.removeEventListener = (name, handler) => {
+      if (!this.events.hasOwnProperty(name)) {
         return;
       }
 
-      var index = self.events[name].indexOf(handler);
+      const index = this.events[name].indexOf(handler);
       if (index !== -1) {
-        self.events[name].splice(index, 1);
+        this.events[name].splice(index, 1);
       }
     };
 
-    this.fireEvent = function(name, args) {
-      if (!self.events.hasOwnProperty(name)) {
+    this.fireEvent = (name, args) => {
+      if (!this.events.hasOwnProperty(name)) {
         return;
       }
       if (!args) {
         args = [];
       }
 
-      var evs = self.events[name];
-      evs.forEach(function(ev) {
-        ev.apply(null, args);
-      });
+      for (const ev of this.events[name]) {
+        ev(...args);
+      }
     };
   }
 
@@ -623,9 +612,8 @@ class Recorder extends Player {
     // Canvas (basic support)
     // Method of generating fast, dynamic graphics using JavaScript.
     // http://caniuse.com/#feat=canvas
-    var canCreateCanvas = Boolean(window.HTMLCanvasElement);
-    console.log('Native Canvas capability: ' +
-      canCreateCanvas);
+    const canCreateCanvas = Boolean(window.HTMLCanvasElement);
+    console.log('Native Canvas capability: ', canCreateCanvas);
 
     if (!canCreateCanvas) {
       throw new Error('No Canvas element capabilities');
@@ -641,29 +629,28 @@ class Recorder extends Player {
     // Call super
     super._writeUI(ui);
 
-    var id = this.playerId;
+    const id = this.playerId;
     this.recordtoggle = document.getElementById(id + 'recordtoggle');
     this.dot = document.getElementById(id + 'dot');
     this.timeindication = document.getElementById(id + 'timeindication');
 
-    var self = this;
-    this.recordtoggle.onclick = function() {
-      if (self.recorder.hasUserMediaApproval()) {
-        self.recorder.toggleRecording();
-        if (self.recorder.isRecording()) {
-          self.fireEvent('recording');
+    this.recordtoggle.onclick = () => {
+      if (this.recorder.hasUserMediaApproval()) {
+        this.recorder.toggleRecording();
+        if (this.recorder.isRecording()) {
+          this.fireEvent('recording');
         } else {
-          self.fireEvent('recorded');
+          this.fireEvent('recorded');
         }
       } else {
-        self.recorder.requestUserMedia();
+        this.recorder.requestUserMedia();
       }
     };
 
     // Draw a Volume Canvas
-    var canvas = document.getElementById(id + 'canvas');
+    const canvas = document.getElementById(id + 'canvas');
     this.canvas = new VolumeCanvas({
-      canvas: canvas
+      canvas
     });
     this.canvas.draw(0);
   }
@@ -674,23 +661,22 @@ class Recorder extends Player {
    */
   _getUI() {
     // Call super
-    var player = super._getUI();
-    var id = this.playerId;
-    var recorder =
-      // Container to place recording area to the left of the play area.
-      '<div class="recorder">' +
-      // VU meter ring
-      '<canvas id="' + id + 'canvas" class="canvas"></canvas>' +
-      // Record button container class
-      '<button id="' + id + 'recordtoggle" class="recordToggle noPermission">' +
-      // Microphone icon
-      '<div class="icon"></div>' +
-      // Red pulsating dot
-      '<div id="' + id + 'dot" class="pulse off"></div>' +
-      '</button>' +
-      '</div>';
-    var wrapper = '<div class="combinator">' +
-      recorder + player + '</div>';
+    const player = super._getUI();
+    const id = this.playerId;
+    const recorder = `
+      <!-- Container to place recording area to the left of the play area. -->
+      <div class="recorder">
+        <!-- VU meter ring -->
+        <canvas id="${id}canvas" class="canvas"></canvas>
+        <!-- Record button container class -->
+        <button id="${id}recordtoggle" class="recordToggle noPermission">
+          <!-- Microphone icon -->
+          <div class="icon"></div>
+          <!-- Red pulsating dot -->
+          <div id="${id}dot" class="pulse off"></div>
+        </button>
+      </div>`;
+    const wrapper = '<div class="combinator">' + recorder + player + '</div>';
     return wrapper;
   }
 
@@ -713,10 +699,9 @@ class Recorder extends Player {
    *
    */
   attachVolumeMeter(vu) {
-    var self = this;
-    vu.getVolumeIndication(function(volume) {
+    vu.getVolumeIndication(volume => {
       // Convert 1..100 scale to 0..1
-      self.canvas.draw(volume / 100);
+      this.canvas.draw(volume / 100);
     });
   }
 
@@ -737,14 +722,14 @@ class Recorder extends Player {
    * @param {number} elapsed Amount of time passed (in seconds) since recording started.
    */
   _updateTimer(elapsed) {
-    var text = this._timerText(elapsed) + ' / ' + this._timerText(this.settings.maxRecordingDuration);
+    const text = this._timerText(elapsed) + ' / ' + this._timerText(this.settings.maxRecordingDuration);
     this._updateTimeIndication(text);
   }
 }
 
 module.exports = {
-  MiniPlayer: MiniPlayer,
-  Player: Player,
-  Recorder: Recorder,
-  VolumeCanvas: VolumeCanvas
+  MiniPlayer,
+  Player,
+  Recorder,
+  VolumeCanvas
 };
