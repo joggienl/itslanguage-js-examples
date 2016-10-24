@@ -16,6 +16,8 @@ console.log = function(...args) {
 const textcomps = require('../components/textual-components');
 const uicomps = require('../components/audio-components');
 
+const settings = require('./settings.json');
+
 /*
  * This is demo code performing several streaming operations.
  */
@@ -39,25 +41,25 @@ Raven.config(dsn).install();
 
 function setDefaultSettings() {
   // Setup default configuration
-  document.getElementById('apiUrl').value = its.API_URL;
-  document.getElementById('principal').value = its.API_PRINCIPAL;
-  document.getElementById('tenantId').value = its.API_TENANT_ID;
-  document.getElementById('credentials').value = its.API_CREDENTIALS;
-  document.getElementById('wsUrl').value = its.API_WS_URL;
+  document.getElementById('apiUrl').value = settings.API_URL;
+  document.getElementById('principal').value = settings.API_PRINCIPAL;
+  document.getElementById('tenantId').value = settings.API_TENANT_ID;
+  document.getElementById('credentials').value = settings.API_CREDENTIALS;
+  document.getElementById('wsUrl').value = settings.API_WS_URL;
 }
 
 function setRecordingSettings() {
-  document.getElementById('challengeId').value = its.RECORDING_CHALLENGE_ID;
+  document.getElementById('challengeId').value = settings.RECORDING_CHALLENGE_ID;
 }
 
 function setAnalysisSettings() {
   // Bird watching
-  document.getElementById('challengeId').value = its.ANALYSIS_CHALLENGE_ID;
+  document.getElementById('challengeId').value = settings.ANALYSIS_CHALLENGE_ID;
 }
 
 function setRecognitionSettings() {
   // car;bike;bus
-  document.getElementById('challengeId').value = its.RECOGNITION_CHALLENGE_ID;
+  document.getElementById('challengeId').value = settings.RECOGNITION_CHALLENGE_ID;
 }
 
 function connect() {
