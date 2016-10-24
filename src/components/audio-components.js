@@ -225,7 +225,7 @@ class Player {
     const player = `
       <!-- Container as play area. -->
       <p class="player">
-        // Play button container class
+        <!-- Play button container class -->
         <button id="${id}playtoggle" class="playToggle" disabled>
           <!-- Play icon -->
           <div class="icon"></div>
