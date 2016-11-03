@@ -313,11 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Hide all functionality unless 'all' is appended to the url.
-  if (window.location.search.indexOf('all') !== -1) {
     recognitionButton.parentElement.classList.remove('hidden');
     analysisButton.parentElement.classList.remove('hidden');
-  }
 
   function toggleOn(kind) {
     const button = document.getElementById(kind + 'Button');
