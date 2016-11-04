@@ -108,9 +108,7 @@ function recordingStartSession() {
   const organisationId = document.getElementById('organisationId').value;
   const challengeId = document.getElementById('challengeId').value;
   const challenge = new its.SpeechChallenge(organisationId, challengeId, 'dummy');
-  sdk.startStreamingSpeechRecording(challenge, rec)
-    .catch(failureCb)
-    .then(recordedCb);
+  sdk.startStreamingSpeechRecording(challenge, rec, preparedCb, recordedCb, failureCb);
 }
 
 function resetRecordingResults() {
@@ -176,7 +174,6 @@ function preparedCb(sessionId) {
 }
 
 function recordedCb(recording) {
-  console.log('in recorded cb with ' + recording);
   document.getElementById('sessionId').value = recording.id;
   setDownloadLink(recording.audioUrl);
 
@@ -211,7 +208,6 @@ function recognisedCb(recognition) {
 }
 
 function failureCb(result, message) {
-  console.log('In failureCB');
   setDownloadLink(result.audioUrl);
   document.getElementById('failureMessage').value = message || result.message;
   startSession();
