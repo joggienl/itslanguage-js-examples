@@ -313,9 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-    recognitionButton.parentElement.classList.remove('hidden');
-    analysisButton.parentElement.classList.remove('hidden');
-
   function toggleOn(kind) {
     const button = document.getElementById(kind + 'Button');
     button.parentElement.classList.add('active');
