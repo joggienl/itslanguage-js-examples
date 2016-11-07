@@ -29,11 +29,7 @@ Run the project
 $ npm start
 ```
 
-By default, the project will be accessible on localhost:3000. This can be changed in package.json by modifying the line 
-````
-"start": "webpack-dev-server --hot --inline --progress --color --port 3000"
-````
-and changing the port flag.
+By default, the project will be accessible on localhost:3000.
 
 ## API Reference
 
