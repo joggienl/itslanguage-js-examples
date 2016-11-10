@@ -275,9 +275,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!recordingButton.parentElement.classList.contains('active')) {
       active = 'recording';
-      toggleOn('recording');
       toggleOff('analysis');
       toggleOff('recognition');
+      toggleOn('recording');
 
       bindRecordingRecorder();
     }
@@ -291,8 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!analysisButton.parentElement.classList.contains('active')) {
       active = 'analysis';
       toggleOff('recording');
-      toggleOn('analysis');
       toggleOff('recognition');
+      toggleOn('analysis');
 
       bindAnalysisRecorder();
     }
