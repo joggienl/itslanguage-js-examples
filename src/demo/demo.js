@@ -30,6 +30,8 @@ let recorderUI = null;
 let analysisRecorderUI = null;
 let recognitionRecorderUI = null;
 
+let volumeMeter = null;
+
 const detailedScores = document.getElementById('detailedScores');
 const detailedScoresComponent = new textcomps.DetailedScores({
   element: detailedScores
@@ -426,19 +428,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function bindVolumeMeter(recorderUi) {
+    if (volumeMeter !== null) {
+      recorderUi.attachVolumeMeter(volumeMeter);
+    } else {
     // For the volume meter to work, we need an input stream. Request it.
-    if (!rec.hasUserMediaApproval()) {
-      rec.requestUserMedia();
-    }
-
+      if (!rec.hasUserMediaApproval()) {
+        rec.requestUserMedia();
+      }
     // When user has provided permission to use the microphone, the 'ready'
     // event is triggered. At that time, create a VolumeMeter that is in
     // turn attached to the recorder GUI component.
     // This brings the GUI volume meter inside the audio recorder to life.
-    rec.addEventListener('ready', (audioContext, inputStream) => {
-      const volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
-      recorderUi.attachVolumeMeter(volumeMeter);
-    });
+      rec.addEventListener('ready', (audioContext, inputStream) => {
+        volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
+        recorderUi.attachVolumeMeter(volumeMeter);
+      });
+    }
   }
 
   const range1 = document.getElementById('range1');
