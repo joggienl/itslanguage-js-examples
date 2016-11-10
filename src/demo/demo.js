@@ -375,13 +375,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // component. Also, instantiate an AudioPlayer that can be used
     // to playback any recorded audio.
     const recorder = document.getElementById('recorder');
-
-    recorderUI = new uicomps.Recorder({
-      element: recorder,
-      recorder: rec,
-      player: new its.AudioPlayer(),
-      maxRecordingDuration: 200
-    });
+    if (recorderUI === null) {
+      recorderUI = new uicomps.Recorder({
+        element: recorder,
+        recorder: rec,
+        player: new its.AudioPlayer(),
+        maxRecordingDuration: 200
+      });
+    }
+    recorderUI.disableRecorder();
     recorderUI.addEventListener('recording', () => {
       resetRecordingResults();
     });
@@ -395,12 +397,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initAnalysisRecorder() {
     const analysisRecorder = document.getElementById('analysisRecorder');
-    analysisRecorderUI = new uicomps.Recorder({
-      element: analysisRecorder,
-      recorder: rec,
-      player: new its.AudioPlayer(),
-      maxRecordingDuration: 200
-    });
+    if (analysisRecorderUI === null) {
+      analysisRecorderUI = new uicomps.Recorder({
+        element: analysisRecorder,
+        recorder: rec,
+        player: new its.AudioPlayer(),
+        maxRecordingDuration: 200
+      });
+    }
+    analysisRecorderUI.disableRecorder();
     analysisRecorderUI.addEventListener('recording', () => {
       resetAnalysisResults();
     });
@@ -412,12 +417,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initRecognitionRecorder() {
     const recognitionRecorder = document.getElementById('recognitionRecorder');
-    recognitionRecorderUI = new uicomps.Recorder({
-      element: recognitionRecorder,
-      recorder: rec,
-      player: new its.AudioPlayer(),
-      maxRecordingDuration: 200
-    });
+    if (recognitionRecorderUI === null) {
+      recognitionRecorderUI = new uicomps.Recorder({
+        element: recognitionRecorder,
+        recorder: rec,
+        player: new its.AudioPlayer(),
+        maxRecordingDuration: 200
+      });
+    }
+    recognitionRecorderUI.disableRecorder();
     recognitionRecorderUI.addEventListener('recording', () => {
       resetRecognitionResults();
     });
