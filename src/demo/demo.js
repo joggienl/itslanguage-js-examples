@@ -451,15 +451,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const range1out = document.getElementById('range1out');
   const range2out = document.getElementById('range2out');
   range1.oninput = range1.onchange = () => {
-    range1out.innerText = this.value;
+    range1out.innerText = range1.value;
     // Make sure range2 is adjusted to not overlap.
-    range2.value = Math.max(range2.value, this.value);
+    range2.value = Math.max(range2.value, range1.value);
     range2out.innerText = range2.value;
   };
   range2.oninput = range2.onchange = () => {
-    range2out.innerText = this.value;
+    range2out.innerText = range2.value;
     // Make sure range1 is adjusted to not overlap.
-    range1.value = Math.min(range1.value, this.value);
+    range1.value = Math.min(range1.value, range2.value);
     range1out.innerText = range1.value;
   };
 });
