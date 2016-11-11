@@ -2,7 +2,6 @@ require('./demo.css');
 const Raven = require('raven-js');
 const its = require('itslanguage');
 
-
 /* On bowser, there is no console available, log to an element. */
 console.orgLog = console.log;
 console.log = function(...args) {
@@ -197,10 +196,10 @@ function analysisProgressCb(result) {
   if (result === 'ReadyToReceive') {
     analysisRecorderUI.enableRecorder();
   } else {
-  // alignment, reference,Alignment, sessionId
+    // alignment, reference,Alignment, sessionId
     document.getElementById('confidenceScore').value = result.progress.confidenceScore;
     detailedScoresComponent.show(result.progress.words, result.referenceAlignment.words);
-  // Apply bootstrap style table
+    // Apply bootstrap style table
     const table = detailedScores.children[0];
     table.classList.add('table');
     table.classList.add('table-striped');
