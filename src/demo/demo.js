@@ -2,7 +2,6 @@ require('./demo.css');
 const Raven = require('raven-js');
 const its = require('itslanguage');
 
-
 /* On bowser, there is no console available, log to an element. */
 console.orgLog = console.log;
 console.log = function(...args) {
@@ -105,12 +104,16 @@ function startSession() {
 }
 
 function recordingStartSession() {
-  recorderUI.enableRecorder();
-
   const organisationId = document.getElementById('organisationId').value;
   const challengeId = document.getElementById('challengeId').value;
   const challenge = new its.SpeechChallenge(organisationId, challengeId, 'dummy');
-  sdk.startStreamingSpeechRecording(challenge, rec, preparedCb, recordedCb, failureCb);
+  const controller = new its.SpeechRecordingController(sdk);
+  controller.startStreamingSpeechRecording(challenge, rec)
+    .progress(() => {
+      recorderUI.enableRecorder();
+    })
+    .then(recordedCb)
+    .catch(failureCb);
 }
 
 function resetRecordingResults() {
@@ -121,8 +124,6 @@ function resetRecordingResults() {
 }
 
 function analysisStartSession() {
-  analysisRecorderUI.enableRecorder();
-
   const range1 = document.getElementById('range1');
   const range2 = document.getElementById('range2');
   detailedScoresComponent.setThresholdBad(parseInt(range1.value));
@@ -131,7 +132,11 @@ function analysisStartSession() {
   const organisationId = document.getElementById('organisationId').value;
   const challengeId = document.getElementById('challengeId').value;
   const challenge = new its.PronunciationChallenge(organisationId, challengeId, 'dummy');
-  sdk.startStreamingPronunciationAnalysis(challenge, rec, preparedCb, analysedCb, failureCb, analysisProgressCb);
+  const controller = new its.PronunciationAnalysisController(sdk);
+  controller.startStreamingPronunciationAnalysis(challenge, rec)
+    .progress(analysisProgressCb)
+    .then(analysedCb)
+    .catch(failureCb);
 }
 
 function resetAnalysisResults() {
@@ -149,7 +154,13 @@ function recognitionStartSession() {
   const organisationId = document.getElementById('organisationId').value;
   const challengeId = document.getElementById('challengeId').value;
   const challenge = new its.ChoiceChallenge(organisationId, challengeId, 'dummy', []);
-  sdk.startStreamingChoiceRecognition(challenge, rec, preparedCb, recognisedCb, failureCb);
+  const controller = new its.ChoiceRecognitionController(sdk);
+  controller.startStreamingChoiceRecognition(challenge, rec)
+    .progress(() => {
+      recognitionRecorderUI.enableRecorder();
+    })
+    .then(recognisedCb)
+    .catch(failureCb);
 }
 
 function resetRecognitionResults() {
@@ -171,10 +182,6 @@ function setDownloadLink(url) {
   }
 }
 
-function preparedCb(sessionId) {
-  document.getElementById('sessionId').value = sessionId;
-}
-
 function recordedCb(recording) {
   document.getElementById('sessionId').value = recording.id;
   setDownloadLink(recording.audioUrl);
@@ -182,21 +189,26 @@ function recordedCb(recording) {
   startSession();
 }
 
-function analysedCb() {
-  // Skip analysis results for now.
+function analysedCb(result) {
+  setDownloadLink(result.analysis.audioUrl);
+  document.getElementById('sessionId').value = result.analysisId;
 }
 
-function analysisProgressCb(alignment, referenceAlignment) {
-  document.getElementById('confidenceScore').value = alignment.confidenceScore;
-  detailedScoresComponent.show(alignment.words, referenceAlignment.words);
+function analysisProgressCb(result) {
+  if (result === 'ReadyToReceive') {
+    analysisRecorderUI.enableRecorder();
+  } else {
+    // alignment, reference,Alignment, sessionId
+    document.getElementById('confidenceScore').value = result.progress.confidenceScore;
+    detailedScoresComponent.show(result.progress.words, result.referenceAlignment.words);
+    // Apply bootstrap style table
+    const table = detailedScores.children[0];
+    table.classList.add('table');
+    table.classList.add('table-striped');
+    table.classList.add('table-bordered');
 
-  // Apply bootstrap style table
-  const table = detailedScores.children[0];
-  table.classList.add('table');
-  table.classList.add('table-striped');
-  table.classList.add('table-bordered');
-
-  startSession();
+    startSession();
+  }
 }
 
 function recognisedCb(recognition) {
@@ -210,7 +222,8 @@ function recognisedCb(recognition) {
 }
 
 function failureCb(result, message) {
-  setDownloadLink(result.audioUrl);
+  setDownloadLink(result.analysis.audioUrl);
+  document.getElementById('sessionId').value = result.analysis.id;
   document.getElementById('failureMessage').value = message || result.message;
   startSession();
 }
