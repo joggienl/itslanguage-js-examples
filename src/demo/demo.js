@@ -30,6 +30,8 @@ let recorderUI = null;
 let analysisRecorderUI = null;
 let recognitionRecorderUI = null;
 
+let volumeMeter = null;
+
 const detailedScores = document.getElementById('detailedScores');
 const detailedScoresComponent = new textcomps.DetailedScores({
   element: detailedScores
@@ -373,13 +375,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // component. Also, instantiate an AudioPlayer that can be used
     // to playback any recorded audio.
     const recorder = document.getElementById('recorder');
-
-    recorderUI = new uicomps.Recorder({
-      element: recorder,
-      recorder: rec,
-      player: new its.AudioPlayer(),
-      maxRecordingDuration: 200
-    });
+    if (recorderUI === null) {
+      recorderUI = new uicomps.Recorder({
+        element: recorder,
+        recorder: rec,
+        player: new its.AudioPlayer(),
+        maxRecordingDuration: 200
+      });
+    }
+    recorderUI.disableRecorder();
     recorderUI.addEventListener('recording', () => {
       resetRecordingResults();
     });
@@ -393,12 +397,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initAnalysisRecorder() {
     const analysisRecorder = document.getElementById('analysisRecorder');
-    analysisRecorderUI = new uicomps.Recorder({
-      element: analysisRecorder,
-      recorder: rec,
-      player: new its.AudioPlayer(),
-      maxRecordingDuration: 200
-    });
+    if (analysisRecorderUI === null) {
+      analysisRecorderUI = new uicomps.Recorder({
+        element: analysisRecorder,
+        recorder: rec,
+        player: new its.AudioPlayer(),
+        maxRecordingDuration: 200
+      });
+    }
+    analysisRecorderUI.disableRecorder();
     analysisRecorderUI.addEventListener('recording', () => {
       resetAnalysisResults();
     });
@@ -410,12 +417,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initRecognitionRecorder() {
     const recognitionRecorder = document.getElementById('recognitionRecorder');
-    recognitionRecorderUI = new uicomps.Recorder({
-      element: recognitionRecorder,
-      recorder: rec,
-      player: new its.AudioPlayer(),
-      maxRecordingDuration: 200
-    });
+    if (recognitionRecorderUI === null) {
+      recognitionRecorderUI = new uicomps.Recorder({
+        element: recognitionRecorder,
+        recorder: rec,
+        player: new its.AudioPlayer(),
+        maxRecordingDuration: 200
+      });
+    }
+    recognitionRecorderUI.disableRecorder();
     recognitionRecorderUI.addEventListener('recording', () => {
       resetRecognitionResults();
     });
@@ -426,19 +436,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function bindVolumeMeter(recorderUi) {
+    if (volumeMeter !== null) {
+      recorderUi.attachVolumeMeter(volumeMeter);
+    } else {
     // For the volume meter to work, we need an input stream. Request it.
-    if (!rec.hasUserMediaApproval()) {
-      rec.requestUserMedia();
-    }
-
+      if (!rec.hasUserMediaApproval()) {
+        rec.requestUserMedia();
+      }
     // When user has provided permission to use the microphone, the 'ready'
     // event is triggered. At that time, create a VolumeMeter that is in
     // turn attached to the recorder GUI component.
     // This brings the GUI volume meter inside the audio recorder to life.
-    rec.addEventListener('ready', (audioContext, inputStream) => {
-      const volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
-      recorderUi.attachVolumeMeter(volumeMeter);
-    });
+      rec.addEventListener('ready', (audioContext, inputStream) => {
+        volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
+        recorderUi.attachVolumeMeter(volumeMeter);
+      });
+    }
   }
 
   const range1 = document.getElementById('range1');
@@ -446,15 +459,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const range1out = document.getElementById('range1out');
   const range2out = document.getElementById('range2out');
   range1.oninput = range1.onchange = () => {
-    range1out.innerText = this.value;
+    range1out.innerText = range1.value;
     // Make sure range2 is adjusted to not overlap.
-    range2.value = Math.max(range2.value, this.value);
+    range2.value = Math.max(range2.value, range1.value);
     range2out.innerText = range2.value;
   };
   range2.oninput = range2.onchange = () => {
-    range2out.innerText = this.value;
+    range2out.innerText = range2.value;
     // Make sure range1 is adjusted to not overlap.
-    range1.value = Math.min(range1.value, this.value);
+    range1.value = Math.min(range1.value, range2.value);
     range1out.innerText = range1.value;
   };
 });
