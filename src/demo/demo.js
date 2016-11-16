@@ -71,7 +71,7 @@ function connect() {
   config.authPrincipal = document.getElementById('principal').value;
   config.authCredentials = document.getElementById('credentials').value;
   // Setup the SDK.
-  sdk = new its.Sdk(config);
+  sdk = new its.Connection(config);
 
   document.getElementById('connection').value = 'Connecting to ITSLanguage';
   sdk.addEventListener('websocketError', () => {
@@ -87,6 +87,19 @@ function connect() {
     document.getElementById(
       'connection').value = 'No ITSLanguage connection';
   });
+
+  //Create a BasicAuth with your credentials.
+  const basicAuth = new its.BasicAuth(config.authPrincipal, config.authPrincipal, config.authCredentials);
+  //For demo purposes, organisation and student are set to dummy.
+  sdk.getOauth2Token(basicAuth, 'dummy', 'dummy')
+    .then(result => {
+      //Set the token.
+      sdk.settings.oAuth2Token = result.access_token;
+      sdk.webSocketConnect(sdk.settings.oAuth2Token);
+    })
+    .catch(error => {
+      console.log('err' + JSON.stringify(error));
+    });
 }
 
 function startSession() {
