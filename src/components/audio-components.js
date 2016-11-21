@@ -15,12 +15,87 @@ const Tools = require('itslanguage').Tools;
  * @author d-centralize
  */
 
+class BasePlayer {
+  constructor(options) {
+    this.settings = Object.assign({}, options);
+    this._writeUI(this.settings.element);
+
+    this.player = this.settings.player;
+
+    this.player.addEventListener('playing', () => {
+      this._setPlaying();
+    });
+
+    // The `canplay` event may have been fired already when the audio
+    // player was already initialised. Call _setPlayable() in that case.
+    if (this.player.canPlay()) {
+      this._setPlayable();
+    } else {
+      this.player.addEventListener('canplay', () => {
+        this._setPlayable();
+      });
+    }
+
+    this.player.addEventListener('playbackstopped', () => {
+      this._setNotPlaying();
+    });
+
+    this.player.addEventListener('error', () => {
+      this._setError();
+    });
+
+    this.player.addEventListener('unloaded', () => {
+      this._setNotPlayable();
+    });
+  }
+
+  _setPlaying() {
+    console.log('Playbutton set to playing state');
+    this.playtoggle.classList.add('playing');
+  }
+
+  _setNotPlaying() {
+    console.log('Playbutton set to non-playing state');
+    this.playtoggle.classList.remove('playing');
+  }
+
+  _setPlayable() {
+    console.log('Playbutton set to a playable state');
+    this.playtoggle.removeAttribute('disabled');
+  }
+
+  _setNotPlayable() {
+    console.log('Playbutton set to a non-playable state');
+    this.playtoggle.setAttribute('disabled', 'disabled');
+  }
+
+  _setError() {
+    this._setNotPlaying();
+    this.playtoggle.classList.add('error');
+  }
+
+  /**
+   * Appends the player GUI to the DOM.
+   *
+   * @param {element} ui The DOM element to append GUI to.
+   */
+  _writeUI(ui) {
+    const playerContent = this._getUI();
+    ui.appendChild(playerContent);
+    const id = this.playerId;
+    this.playtoggle = document.getElementById(id + 'playtoggle');
+    this.playtoggle.onclick = () => {
+      this.player.togglePlayback();
+    };
+  }
+}
+
 /**
  @module its
  ITSLanguage Audio module.
  */
 
-class Player {
+class Player extends BasePlayer {
   /**
    * ITSLanguage Audio module.
    *
@@ -29,44 +104,8 @@ class Player {
    *
    */
   constructor(options) {
-    this.settings = Object.assign({
-      // For smoother playback position indication, poll for position updates
-      // faster than the browser default (which is often ~250ms).
-      pollFreq: 75
-    }, options);
+    super(options);
 
-    this._writeUI(this.settings.element);
-
-    this.player = this.settings.player;
-    const self = this;
-
-    this.player.addEventListener('playing', () => {
-      self._setPlaying();
-      self._startPollingForPosition(self.settings.pollFreq);
-    });
-    this.player.addEventListener('timeupdate', () => {
-      self._getTimeUpdate();
-    });
-    // In case the event was already fired, try to update audio stats.
-    this._timeUpdate();
-    this.player.addEventListener('durationchange', () => {
-      self._timeUpdate();
-    });
-    this.player.addEventListener('canplay', () => {
-      self._setPlayable();
-    });
-    // The `canplay` event may have been fired already when the audio
-    // player was already initialised. Call _setPlayable() in that case.
-    if (this.player.canPlay()) {
-      self._setPlayable();
-    }
-    this.player.addEventListener('ended', () => {
-      self._setNotPlaying();
-      self._stopPollingForPosition();
-    });
-    this.player.addEventListener('pause', () => {
-      self._setNotPlaying();
-      self._stopPollingForPosition();
     });
     this.player.addEventListener('progress', () => {
       self._loadingUpdate();
@@ -174,20 +213,15 @@ class Player {
    * @param {element} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    const playerContent = this._getUI();
-    ui.innerHTML = playerContent;
+    super._writeUI(ui);
 
     const id = this.playerId;
-    this.playtoggle = document.getElementById(id + 'playtoggle');
     this.range = document.getElementById(id + 'range');
     this.loading = document.getElementById(id + 'loading');
     this.dragger = document.getElementById(id + 'dragger');
     this.timeindication = document.getElementById(id + 'timeindication');
 
     const self = this;
-    this.playtoggle.onclick = function() {
-      self.player.togglePlayback();
-    };
 
     function onDrag(pct) {
       // Update the playing time as it would be playing once the user
@@ -334,69 +368,23 @@ class Player {
     }
   }
 
-  /**
-   * Start polling frequently for the current playing time of the audio.
-   * By default, browsers use resources very conservative and don't provide
-   * time updates frequently enough for the GUI to have a smooth slider.
-   *
-   * @param {number} pollFreq The polling frequency in milliseconds.
-   */
-  _startPollingForPosition(pollFreq) {
-    const self = this;
-    if (this.pollInterval || !pollFreq) {
-      return;
-    }
-
-    console.log('Start polling for audio position.');
-    this.pollInterval = setInterval(() => {
-      self._getTimeUpdate();
-    }, pollFreq);
-  }
-
-  /**
-   * Stop polling for the current playing time of the audio.
-   */
-  _stopPollingForPosition() {
-    if (this.pollInterval) {
-      console.log('Stopped polling for audio position.');
-      clearInterval(this.pollInterval);
-      this.pollInterval = null;
-    }
-  }
-
-  _setPlaying() {
-    console.log('Playbutton set to playing state');
-    this.playtoggle.classList.add('playing');
-  }
-
-  _setNotPlaying() {
-    console.log('Playbutton set to non-playing state');
-    this.playtoggle.classList.remove('playing');
-  }
-
   _setPlayable() {
-    console.log('Playbutton set to a playable state');
-    this.playtoggle.removeAttribute('disabled');
+    super._setPlayable();
+    this._timeUpdate(0);
     if (this.dragger) {
       this.dragger.removeAttribute('disabled');
     }
   }
 
   _setNotPlayable() {
-    console.log('Playbutton set to a non-playable state');
-    this.playtoggle.setAttribute('disabled', 'disabled');
+    super._setNotPlayable();
     if (this.dragger) {
       this.dragger.setAttribute('disabled', 'disabled');
     }
   }
-
-  _setError() {
-    this._setNotPlaying();
-    this.playtoggle.classList.add('error');
-  }
 }
 
-class MiniPlayer {
+class MiniPlayer extends BasePlayer {
   /**
    * Defines the miniplayer GUI.
    *
@@ -422,7 +410,8 @@ class MiniPlayer {
     return player;
   }
 
-  _updatePositionIndication(pct) {
+  _writeUI(ui) {
+    super._writeUI(ui);
   }
 }
 
@@ -522,7 +511,7 @@ class VolumeCanvas {
   }
 }
 
-class Recorder extends Player {
+class Recorder {
   /**
    * ITSLanguage Record component.
    *
@@ -530,12 +519,14 @@ class Recorder extends Player {
    * @param {object} [options] Override any of the default settings.
    */
   constructor(options) {
-    super(Object.assign({
+    this.settings = Object.assign({
       // In seconds
       maxRecordingDuration: 10
-    }, options));
+    }, options);
 
     this._drawingCompatibility();
+    this._writeUI(this.settings.element);
+
 
     this.recorder = this.settings.recorder;
 
@@ -587,9 +578,8 @@ class Recorder extends Player {
    * @param {element} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    // Call super
-    super._writeUI(ui);
-
+    const playerContent = this._getUI();
+    ui.appendChild(playerContent);
     const id = this.playerId;
     this.recordtoggle = document.getElementById(id + 'recordtoggle');
     this.dot = document.getElementById(id + 'dot');
