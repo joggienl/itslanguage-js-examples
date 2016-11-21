@@ -547,7 +547,10 @@ class Recorder {
       this._permitRecorder();
     }
     // .. or an event will trigger soon.
-    this.recorder.addEventListener('ready', () => {
+    this.recorder.addEventListener('ready', (audioContext, inputStream) => {
+      const volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
+      this.attachVolumeMeter(volumeMeter);
+      this._updateTimer(0);
       this._permitRecorder();
     });
 
