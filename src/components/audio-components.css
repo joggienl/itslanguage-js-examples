@@ -37,7 +37,7 @@
     margin: 0;
 }
 
-.player .timeindication {
+.timeindication {
     font: 13px/20px "Helvetica Neue", Arial, sans-serif;
     line-height: 46px;
     position: absolute;
@@ -47,6 +47,11 @@
     font-size: 11px;
     color: #6e6e6e;
     margin-right: 10px;
+}
+
+.recorder .timeindication {
+    top:40px;
+    left:-25px;
 }
 
 .player .wrapper .timeindication {
