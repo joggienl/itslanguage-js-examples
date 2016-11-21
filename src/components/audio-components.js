@@ -307,11 +307,15 @@ class Player extends BasePlayer {
    * @param {number} [seconds] Any number of seconds. Use float for high accuracy output.
    * @returns A duration in the form of mm:ss.nn (minutes, seconds, partial seconds).
    */
-  _timerText(seconds) {
-    const mins = Math.floor(seconds / 60, 10);
-    const secs = parseInt(seconds - mins * 60, 10);
-    const decimal = parseInt((seconds - mins * 60 - secs) * 10, 10);
-    return mins + ':' + (secs < 10 ? '0' + secs : secs) + '.' + decimal;
+  static _timerText(seconds) {
+    const date = new Date(seconds * 1000);
+    const mins = date.getMinutes();
+    let secs = date.getSeconds();
+    const ms = Math.floor(date.getMilliseconds() / 100);
+    if (secs < 10) {
+      secs = '0' + secs;
+    }
+    return mins + ':' + secs + '.' + ms;
   }
 
   /**
@@ -331,8 +335,8 @@ class Player extends BasePlayer {
       offset = this.player.getCurrentTime();
     }
 
-    const text = this._timerText(offset) + ' / ' + this._timerText(duration);
-    this._updateTimeIndication(text);
+    const text = Player._timerText(offset) + ' / ' + Player._timerText(duration);
+    _updateTimeIndication(this.timeindication, text);
   }
 
   /**
@@ -532,9 +536,9 @@ class Recorder {
       maxRecordingDuration: 10
     }, options);
 
-    this._drawingCompatibility();
     this._writeUI(this.settings.element);
 
+    Recorder._drawingCompatibility();
 
     this.recorder = this.settings.recorder;
 
@@ -568,7 +572,7 @@ class Recorder {
    * Logs browser compatibility for canvas drawing.
    * In case of compatibility issues, an error is thrown.
    */
-  _drawingCompatibility() {
+  static _drawingCompatibility() {
     // Canvas (basic support)
     // Method of generating fast, dynamic graphics using JavaScript.
     // http://caniuse.com/#feat=canvas
@@ -690,8 +694,8 @@ class Recorder {
    * @param {number} elapsed Amount of time passed (in seconds) since recording started.
    */
   _updateTimer(elapsed) {
-    const text = this._timerText(elapsed) + ' / ' + this._timerText(this.settings.maxRecordingDuration);
-    this._updateTimeIndication(text);
+    const text = Player._timerText(elapsed) + ' / ' + Player._timerText(this.settings.maxRecordingDuration);
+    _updateTimeIndication(this.timeindication, text);
   }
 }
 
