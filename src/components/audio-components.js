@@ -113,8 +113,9 @@ class Player extends BasePlayer {
         this._positionUpdate(this.player);
       }
     });
+
     this.player.addEventListener('progress', () => {
-      self._loadingUpdate();
+      this._loadingUpdate();
     });
 
     this.player.addEventListener('durationchange', () => {
@@ -122,9 +123,10 @@ class Player extends BasePlayer {
       this._getTimeUpdate();
       this._loadingUpdate();
     });
+
     this.player.addEventListener('unloaded', () => {
       // Sets the time to 0:00.0 / 0:00.0 when no audio is loaded.
-      self._getTimeUpdate();
+      this._getTimeUpdate();
     });
   }
 
@@ -153,7 +155,7 @@ class Player extends BasePlayer {
 
     const self = this;
     range.addEventListener('mousedown', e => {
-      self.draggerDown = true;
+      this.draggerDown = true;
       updateDragger(e);
       return false;
     });
@@ -166,11 +168,11 @@ class Player extends BasePlayer {
       // This event fires on all slider instances listening on document
       // mousup, therefore stop executing if this slider was not the
       // one starting the drag.
-      if (self.draggerDown === false) {
+      if (this.draggerDown === false) {
         return false;
       }
 
-      self.draggerDown = false;
+      this.draggerDown = false;
 
       // Seek audio when done scrubbing
       if (onDragEnd instanceof Function) {

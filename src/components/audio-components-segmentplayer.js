@@ -246,14 +246,13 @@ class SegmentPlayer extends BaseSegmentPlayer {
       this.player.togglePlayback();
     };
 
+    const self = this;
     function onDrag(globalPct) {
       // Update the playing time as it would be playing once the user
       // would release the dragger.
-      this._timeUpdate(globalPct);
-      this._updatePositionIndication(globalPct);
+      self._timeUpdate(globalPct);
+      self._updatePositionIndication(globalPct);
     }
-
-    const self = this;
 
     function onDragEnd(globalPct) {
       // Start playing audio at the new position now the dragger has
