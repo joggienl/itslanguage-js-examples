@@ -702,6 +702,16 @@ class Recorder {
   }
 }
 
+/**
+ * Update the time indication
+ *
+ * @param {HTMLElement} element The element to update the time indication for.
+ * @param {string} text The time to show.
+ */
+function _updateTimeIndication(element, text) {
+  element.innerHTML = text;
+}
+
 module.exports = {
   MiniPlayer,
   Player,
