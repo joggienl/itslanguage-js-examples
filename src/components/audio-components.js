@@ -326,7 +326,7 @@ class Player extends BasePlayer {
    *   time.
    */
   _timeUpdate(pct) {
-    const duration = this.player.getDuration();
+    const duration = this.totalDuration;
     let offset = null;
     if (pct !== undefined) {
       // Display time while seeking, not currentTime in audio.
@@ -345,12 +345,12 @@ class Player extends BasePlayer {
    * Also update the GUI with this new position indication.
    */
   _positionUpdate() {
-    const duration = this.player.getDuration();
+    const duration = this.totalDuration;
     let pos = 0;
     // Prevent division by zero errors when no audio is loaded
     // and duration is 0.
     if (duration > 0) {
-      pos = this.player.getCurrentTime() * 100 / this.player.getDuration();
+      pos = this.player.getCurrentTime() * 100 / this.totalDuration;
     }
     this._updatePositionIndication(pos);
   }
