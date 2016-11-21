@@ -220,20 +220,42 @@ class Player {
    */
   _getUI() {
     const id = this.playerId = guid.create();
-    const player = `
-      <!-- Container as play area. -->
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-        <span id="${id}range" class="gutter">
-        <span id="${id}loading" class="loading"></span>
-          <button id="${id}dragger" class="handle" disabled></button>
-        </span>
-        <span id="${id}timeindication" class="timeindication"></span>
-      </p>`;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    const range = document.createElement('span');
+    range.id = id + 'range';
+    range.className = 'gutter';
+
+    const loading = document.createElement('span');
+    loading.id = id + 'loading';
+    loading.className = 'loading';
+
+    const dragger = document.createElement('button');
+    dragger.id = id + 'dragger';
+    dragger.className = 'handle';
+    dragger.disabled = true;
+
+    const timeIndication = document.createElement('span');
+    timeIndication.id = id + 'timeindication';
+    timeIndication.className = 'timeindication';
+
+    range.appendChild(dragger);
+    range.appendChild(loading);
+    playButton.appendChild(playIcon);
+    player.appendChild(playButton);
+    player.appendChild(range);
+    player.appendChild(timeIndication);
+
     return player;
   }
 
@@ -381,27 +403,23 @@ class MiniPlayer {
    */
   _getUI() {
     const id = this.playerId = guid.create();
-    const player = `
-      <!-- Container as play area. -->
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-      </p>`;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    playButton.appendChild(playIcon);
+
+    player.appendChild(playButton);
+
     return player;
-  }
-
-  /* These GUI related callbacks should be ignored in this subclass */
-
-  _applyRangeSlider(range, dragger, onDrag, onDragEnd) {
-  }
-
-  _updateTimeIndication(text) {
-  }
-
-  _loadingUpdate() {
   }
 
   _updatePositionIndication(pct) {
@@ -598,24 +616,38 @@ class Recorder extends Player {
    *
    */
   _getUI() {
-    // Call super
-    const player = super._getUI();
-    const id = this.playerId;
-    const recorder = `
-      <!-- Container to place recording area to the left of the play area. -->
-      <div class="recorder">
-        <!-- VU meter ring -->
-        <canvas id="${id}canvas" class="canvas"></canvas>
-        <!-- Record button container class -->
-        <button id="${id}recordtoggle" class="recordToggle noPermission">
-          <!-- Microphone icon -->
-          <div class="icon"></div>
-          <!-- Red pulsating dot -->
-          <div id="${id}dot" class="pulse off"></div>
-        </button>
-      </div>`;
-    const wrapper = '<div class="combinator">' + recorder + player + '</div>';
-    return wrapper;
+    const id = this.playerId = guid.create();
+
+    const recorder = document.createElement('div');
+    recorder.className = 'recorder';
+
+    const timeIndication = document.createElement('span');
+    timeIndication.id = id + 'timeindication';
+    timeIndication.className = 'timeindication';
+
+    const canvas = document.createElement('canvas');
+    canvas.id = id + 'canvas';
+    canvas.className = 'canvas';
+
+    const recordingButton = document.createElement('button');
+    recordingButton.id = id + 'recordtoggle';
+    recordingButton.className = 'recordToggle noPermission';
+
+    const microphoneIcon = document.createElement('div');
+    microphoneIcon.className = 'icon';
+
+    const pulsatingDot = document.createElement('div');
+    pulsatingDot.id = id + 'dot';
+    pulsatingDot.className = 'pulse off';
+
+    recordingButton.appendChild(microphoneIcon);
+    recordingButton.appendChild(pulsatingDot);
+
+    recorder.appendChild(canvas);
+    recorder.appendChild(recordingButton);
+    recordingButton.appendChild(timeIndication);
+
+    return recorder;
   }
 
   _permitRecorder() {

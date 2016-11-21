@@ -224,7 +224,7 @@ class SegmentPlayer extends BaseSegmentPlayer {
    * @param {ui} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    ui.innerHTML = this._getUI();
+    ui.appendChild(this._getUI());
 
     const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');
@@ -315,29 +315,57 @@ class SegmentPlayer extends BaseSegmentPlayer {
   _getUI() {
     const id = this.playerId = guid.create();
 
-    let segments = '';
     const self = this;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    const range = document.createElement('span');
+    range.id = id + 'range';
+    range.className = 'gutter';
+
+    const dragger = document.createElement('button');
+    dragger.id = id + 'dragger';
+    dragger.className = 'handle';
+    dragger.disabled = true;
+
+    const timeindication = document.createElement('span');
+    timeindication.id = id + 'timeindication';
+    timeindication.className = 'timeindication';
+
+    range.appendChild(dragger);
+
+    playButton.appendChild(playIcon);
+
+    player.appendChild(playButton);
+    player.appendChild(range);
+    player.appendChild(timeindication);
+
     this.durations.forEach((duration, i) => {
       const pct = duration * 100 / self.totalDuration;
-      segments += `
-        <span id="${id}segment" class="segment ${self.origins[i]}" style="width: ${pct}%">
-          <span id="${id}loading" class="loading ${self.origins[i]}" style="width: 0"></span>
-        </span>`;
+      const segment = document.createElement('span');
+      segment.id = id + 'segment';
+      segment.className = 'segment ' + this.origins[i];
+      segment.style.width = pct + '%';
+
+      const loading = document.createElement('span');
+      loading.id = id + 'loading';
+      loading.className = 'loading ' + this.origins[i];
+      loading.style.width = 0;
+
+      segment.appendChild(loading);
+      range.appendChild(segment);
     });
 
-    return `
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>' +
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-        <span id="${id}range" class="gutter">
-          ${segments}
-          <button id="${id}dragger" class="handle" disabled></button>
-        </span>
-        <span id="${id}timeindication" class="timeindication"></span>
-      '</p>`;
+    return player;
   }
 
   /**
@@ -459,15 +487,22 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
    */
   _getUI() {
     const id = this.playerId = guid.create();
-    const player = `
-      <!-- Container as play area. -->
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-      </p>`;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    playButton.appendChild(playIcon);
+
+    player.appendChild(playButton);
+
     return player;
   }
 
@@ -477,7 +512,7 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
    * @param {ui} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    ui.innerHTML = this._getUI();
+    ui.appendChild(this._getUI());
 
     const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');
