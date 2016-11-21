@@ -71,18 +71,16 @@ class Player {
     this.player.addEventListener('progress', () => {
       self._loadingUpdate();
     });
-    this.player.addEventListener('error', () => {
-      self._stopPollingForPosition();
-      self._setError();
+
+    this.player.addEventListener('durationchange', () => {
+      this.totalDuration = this.player.getDuration();
+      this._getTimeUpdate();
+      this._loadingUpdate();
     });
     this.player.addEventListener('unloaded', () => {
-      self._stopPollingForPosition();
-      self._setNotPlayable();
       // Sets the time to 0:00.0 / 0:00.0 when no audio is loaded.
       self._getTimeUpdate();
     });
-    // In case the event was already fired, try to update audio stats.
-    self._loadingUpdate();
   }
 
   /**
@@ -287,15 +285,6 @@ class Player {
       pos = this.player.getCurrentTime() * 100 / this.player.getDuration();
     }
     this._updatePositionIndication(pos);
-  }
-
-  /**
-   * Update the time indication
-   *
-   * @param {string} text The time to show.
-   */
-  _updateTimeIndication(text) {
-    this.timeindication.innerHTML = text;
   }
 
   /**
@@ -551,57 +540,11 @@ class Recorder extends Player {
     });
     this.recorder.addEventListener('recording', id => {
       this.dot.classList.remove('off');
-      this.stopwatch.reset();
-      this.stopwatch.start();
     });
 
-    this.recorder.addEventListener('recorded', (id, blob, forced) => {
-      this.stopwatch.stop();
+    this.recorder.addEventListener('recorded', () => {
       this.dot.classList.add('off');
-
-      const blobUrl = window.URL.createObjectURL(blob);
-      this.player.load(blobUrl);
     });
-
-    // The addEventListener interface exists on object.Element DOM elements.
-    // However, this is just a simple class without any relation to the DOM.
-    // Therefore we have to implement a pub/sub mechanism ourselves.
-    // See:
-    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener
-    // http://stackoverflow.com/questions/10978311/implementing-events-in-my-own-object
-    this.events = {};
-
-    this.addEventListener = (name, handler) => {
-      if (this.events.hasOwnProperty(name)) {
-        this.events[name].push(handler);
-      } else {
-        this.events[name] = [handler];
-      }
-    };
-
-    this.removeEventListener = (name, handler) => {
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-
-      const index = this.events[name].indexOf(handler);
-      if (index !== -1) {
-        this.events[name].splice(index, 1);
-      }
-    };
-
-    this.fireEvent = (name, args) => {
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-      if (!args) {
-        args = [];
-      }
-
-      for (const ev of this.events[name]) {
-        ev(...args);
-      }
-    };
   }
 
   /**
@@ -637,11 +580,6 @@ class Recorder extends Player {
     this.recordtoggle.onclick = () => {
       if (this.recorder.hasUserMediaApproval()) {
         this.recorder.toggleRecording();
-        if (this.recorder.isRecording()) {
-          this.fireEvent('recording');
-        } else {
-          this.fireEvent('recorded');
-        }
       } else {
         this.recorder.requestUserMedia();
       }

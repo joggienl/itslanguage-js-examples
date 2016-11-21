@@ -34,41 +34,6 @@ class BaseSegmentPlayer {
 
     // No segment selected as active.
     this.currentSegment = null;
-
-    this.events = {};
-
-    this.addEventListener = (name, handler) => {
-      if (this.events.hasOwnProperty(name)) {
-        this.events[name].push(handler);
-      } else {
-        this.events[name] = [handler];
-      }
-    };
-    this.removeEventListener = (name, handler) => {
-      /* This is a bit tricky, because how would you identify functions?
-       This simple solution should work if you pass THE SAME handler. */
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-
-      const index = self.events[name].indexOf(handler);
-      if (index !== -1) {
-        self.events[name].splice(index, 1);
-      }
-    };
-
-    this._fireEvent = (name, args) => {
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-      if (!args || !args.length) {
-        args = [];
-      }
-
-      for (const ev of self.events[name]) {
-        ev(...args);
-      }
-    };
   }
 
   /**
@@ -100,8 +65,6 @@ class BaseSegmentPlayer {
 
     this.player.addEventListener('playing', () => {
       this._setPlaying();
-      this._startPollingForPosition(this.settings.pollFreq);
-      this._fireEvent('playing', []);
     });
     this.player.addEventListener('timeupdate', () => {
       this._getNextSegmentReady();
@@ -118,10 +81,8 @@ class BaseSegmentPlayer {
       if (this.players.length === this.currentSegment + 1) {
         // This is the last of all segments.
         this._setNotPlaying();
-        this._stopPollingForPosition();
         this.currentSegment = null;
         this._nextSegment();
-        this._fireEvent('ended', []);
       } else {
         // Advance into the next segment.
         this._nextSegment();
@@ -130,12 +91,7 @@ class BaseSegmentPlayer {
     });
     this.player.addEventListener('pause', () => {
       this._setNotPlaying();
-      this._stopPollingForPosition();
-      this._fireEvent('pause', []);
     });
-    // this.player.addEventListener('progress', function() {
-    // this._loadingUpdate();
-    // });
     // // In case the event was already fired, try to update audio stats.
     // this._loadingUpdate();
     this.player.addEventListener('error', () => {
@@ -236,9 +192,6 @@ class SegmentPlayer extends BaseSegmentPlayer {
     // Call super
     super._nextSegment(index);
 
-    this.player.addEventListener('timeupdate', () => {
-      this._getTimeUpdate();
-    });
     this.player.addEventListener('progress', () => {
       this._loadingUpdate();
     });
@@ -483,20 +436,6 @@ SegmentPlayer.prototype._timerText = Player._timerText;
  * @param {number} pct The completed percentage (1..100) of all audio stream segments combined.
  */
 SegmentPlayer.prototype._updatePositionIndication = Player.prototype._updatePositionIndication;
-
-/**
- * Start polling frequently for the current playing time of the audio.
- * By default, browsers use resources very conservative and don't provide
- * time updates frequently enough for the GUI to have a smooth slider.
- *
- * @param {number} pollFreq The polling frequency in milliseconds.
- */
-SegmentPlayer.prototype._startPollingForPosition = Player.prototype._startPollingForPosition;
-
-/**
- * Stop polling for the current playing time of the audio.
- */
-SegmentPlayer.prototype._stopPollingForPosition = Player.prototype._stopPollingForPosition;
 
 class MiniSegmentPlayer extends BaseSegmentPlayer {
   /**
