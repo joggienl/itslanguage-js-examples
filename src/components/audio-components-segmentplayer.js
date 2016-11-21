@@ -164,9 +164,9 @@ class SegmentPlayer extends BaseSegmentPlayer {
       if (duration) {
         this.durations[i] = duration;
       }
-      if(!player.stopwatch){
+      if (!player.stopwatch) {
         player.bindStopwatch(this.tickCb.bind(this));
-      }else{
+      } else {
         player.stopwatch.registerListener(this.tickCb.bind(this));
       }
     });
@@ -218,7 +218,7 @@ class SegmentPlayer extends BaseSegmentPlayer {
 
   tickCb() {
     this._getTimeUpdate();
-  };
+  }
 
   _setPlayable() {
     // Call super
