@@ -164,6 +164,11 @@ class SegmentPlayer extends BaseSegmentPlayer {
       if (duration) {
         this.durations[i] = duration;
       }
+      if(!player.stopwatch){
+        player.bindStopwatch(this.tickCb.bind(this));
+      }else{
+        player.stopwatch.registerListener(this.tickCb.bind(this));
+      }
     });
 
     this.totalDuration = 0;
@@ -202,14 +207,18 @@ class SegmentPlayer extends BaseSegmentPlayer {
   /**
    * Get the current playing time for the audio.
    */
-  _getTimeUpdate() {
+  _getTimeUpdate(time) {
     // Don't update time and position from audio when position
     // dragger is being used.
     if (!this.draggerDown) {
-      this._timeUpdate();
+      this._timeUpdate(time);
       this._positionUpdate();
     }
   }
+
+  tickCb() {
+    this._getTimeUpdate();
+  };
 
   _setPlayable() {
     // Call super

@@ -5,8 +5,7 @@
 
 require('./audio-components.css');
 const guid = require('guid');
-const Tools = require('itslanguage').Tools;
-
+const its = require('itslanguage');
 /**
  * @title ITSLanguage Javascript Audio
  * @overview This is part of the ITSLanguage Javascript SDK to perform audio related functions.
@@ -106,6 +105,13 @@ class Player extends BasePlayer {
   constructor(options) {
     super(options);
 
+    this.player.bindStopwatch(time => {
+      if (!this.draggerDown) {
+        const duration = this.totalDuration;
+        const text = Player._timerText(time / 10) + ' / ' + Player._timerText(duration);
+        _updateTimeIndication(this.timeindication, text);
+        this._positionUpdate(this.player);
+      }
     });
     this.player.addEventListener('progress', () => {
       self._loadingUpdate();
@@ -539,7 +545,7 @@ class Recorder {
       this._permitRecorder();
     });
 
-    this.stopwatch = new Tools.Stopwatch(elapsed => {
+    this.recorder.bindStopwatch(elapsed => {
       const seconds = elapsed / 10;
       this._updateTimer(seconds);
       if (this.settings.maxRecordingDuration &&
