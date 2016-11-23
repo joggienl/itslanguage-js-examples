@@ -23,6 +23,14 @@ class BaseSegmentPlayer {
       pollFreq: 75
     }, options);
 
+   this.settings.players.forEach(player => {
+     if(!player.stopwatch){
+       player.bindStopwatch(time => {
+         this._getTimeUpdate(time*2);
+       });
+     }
+    });
+
     this.players = this.settings.players;
     this.durations = this.settings.durations;
     this.origins = this.settings.origins;

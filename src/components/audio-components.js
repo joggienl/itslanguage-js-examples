@@ -21,6 +21,7 @@ class BasePlayer {
 
     this.player = this.settings.player;
 
+    this.totalDuration = null;
     this.player.addEventListener('playing', () => {
       this._setPlaying();
     });
