@@ -34,41 +34,6 @@ class BaseSegmentPlayer {
 
     // No segment selected as active.
     this.currentSegment = null;
-
-    this.events = {};
-
-    this.addEventListener = (name, handler) => {
-      if (this.events.hasOwnProperty(name)) {
-        this.events[name].push(handler);
-      } else {
-        this.events[name] = [handler];
-      }
-    };
-    this.removeEventListener = (name, handler) => {
-      /* This is a bit tricky, because how would you identify functions?
-       This simple solution should work if you pass THE SAME handler. */
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-
-      const index = self.events[name].indexOf(handler);
-      if (index !== -1) {
-        self.events[name].splice(index, 1);
-      }
-    };
-
-    this._fireEvent = (name, args) => {
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-      if (!args || !args.length) {
-        args = [];
-      }
-
-      for (const ev of self.events[name]) {
-        ev(...args);
-      }
-    };
   }
 
   /**
@@ -100,8 +65,6 @@ class BaseSegmentPlayer {
 
     this.player.addEventListener('playing', () => {
       this._setPlaying();
-      this._startPollingForPosition(this.settings.pollFreq);
-      this._fireEvent('playing', []);
     });
     this.player.addEventListener('timeupdate', () => {
       this._getNextSegmentReady();
@@ -118,10 +81,8 @@ class BaseSegmentPlayer {
       if (this.players.length === this.currentSegment + 1) {
         // This is the last of all segments.
         this._setNotPlaying();
-        this._stopPollingForPosition();
         this.currentSegment = null;
         this._nextSegment();
-        this._fireEvent('ended', []);
       } else {
         // Advance into the next segment.
         this._nextSegment();
@@ -130,12 +91,7 @@ class BaseSegmentPlayer {
     });
     this.player.addEventListener('pause', () => {
       this._setNotPlaying();
-      this._stopPollingForPosition();
-      this._fireEvent('pause', []);
     });
-    // this.player.addEventListener('progress', function() {
-    // this._loadingUpdate();
-    // });
     // // In case the event was already fired, try to update audio stats.
     // this._loadingUpdate();
     this.player.addEventListener('error', () => {
@@ -208,6 +164,11 @@ class SegmentPlayer extends BaseSegmentPlayer {
       if (duration) {
         this.durations[i] = duration;
       }
+      if (!player.stopwatch) {
+        player.bindStopwatch(this.tickCb.bind(this));
+      } else {
+        player.stopwatch.registerListener(this.tickCb.bind(this));
+      }
     });
 
     this.totalDuration = 0;
@@ -236,9 +197,6 @@ class SegmentPlayer extends BaseSegmentPlayer {
     // Call super
     super._nextSegment(index);
 
-    this.player.addEventListener('timeupdate', () => {
-      this._getTimeUpdate();
-    });
     this.player.addEventListener('progress', () => {
       this._loadingUpdate();
     });
@@ -249,13 +207,17 @@ class SegmentPlayer extends BaseSegmentPlayer {
   /**
    * Get the current playing time for the audio.
    */
-  _getTimeUpdate() {
+  _getTimeUpdate(time) {
     // Don't update time and position from audio when position
     // dragger is being used.
     if (!this.draggerDown) {
-      this._timeUpdate();
+      this._timeUpdate(time);
       this._positionUpdate();
     }
+  }
+
+  tickCb() {
+    this._getTimeUpdate();
   }
 
   _setPlayable() {
@@ -271,7 +233,7 @@ class SegmentPlayer extends BaseSegmentPlayer {
    * @param {ui} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    ui.innerHTML = this._getUI();
+    ui.appendChild(this._getUI());
 
     const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');
@@ -284,14 +246,13 @@ class SegmentPlayer extends BaseSegmentPlayer {
       this.player.togglePlayback();
     };
 
+    const self = this;
     function onDrag(globalPct) {
       // Update the playing time as it would be playing once the user
       // would release the dragger.
-      this._timeUpdate(globalPct);
-      this._updatePositionIndication(globalPct);
+      self._timeUpdate(globalPct);
+      self._updatePositionIndication(globalPct);
     }
-
-    const self = this;
 
     function onDragEnd(globalPct) {
       // Start playing audio at the new position now the dragger has
@@ -362,29 +323,57 @@ class SegmentPlayer extends BaseSegmentPlayer {
   _getUI() {
     const id = this.playerId = guid.create();
 
-    let segments = '';
     const self = this;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    const range = document.createElement('span');
+    range.id = id + 'range';
+    range.className = 'gutter';
+
+    const dragger = document.createElement('button');
+    dragger.id = id + 'dragger';
+    dragger.className = 'handle';
+    dragger.disabled = true;
+
+    const timeindication = document.createElement('span');
+    timeindication.id = id + 'timeindication';
+    timeindication.className = 'timeindication';
+
+    range.appendChild(dragger);
+
+    playButton.appendChild(playIcon);
+
+    player.appendChild(playButton);
+    player.appendChild(range);
+    player.appendChild(timeindication);
+
     this.durations.forEach((duration, i) => {
       const pct = duration * 100 / self.totalDuration;
-      segments += `
-        <span id="${id}segment" class="segment ${self.origins[i]}" style="width: ${pct}%">
-          <span id="${id}loading" class="loading ${self.origins[i]}" style="width: 0"></span>
-        </span>`;
+      const segment = document.createElement('span');
+      segment.id = id + 'segment';
+      segment.className = 'segment ' + this.origins[i];
+      segment.style.width = pct + '%';
+
+      const loading = document.createElement('span');
+      loading.id = id + 'loading';
+      loading.className = 'loading ' + this.origins[i];
+      loading.style.width = 0;
+
+      segment.appendChild(loading);
+      range.appendChild(segment);
     });
 
-    return `
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>' +
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-        <span id="${id}range" class="gutter">
-          ${segments}
-          <button id="${id}dragger" class="handle" disabled></button>
-        </span>
-        <span id="${id}timeindication" class="timeindication"></span>
-      '</p>`;
+    return player;
   }
 
   /**
@@ -484,20 +473,6 @@ SegmentPlayer.prototype._timerText = Player._timerText;
  */
 SegmentPlayer.prototype._updatePositionIndication = Player.prototype._updatePositionIndication;
 
-/**
- * Start polling frequently for the current playing time of the audio.
- * By default, browsers use resources very conservative and don't provide
- * time updates frequently enough for the GUI to have a smooth slider.
- *
- * @param {number} pollFreq The polling frequency in milliseconds.
- */
-SegmentPlayer.prototype._startPollingForPosition = Player.prototype._startPollingForPosition;
-
-/**
- * Stop polling for the current playing time of the audio.
- */
-SegmentPlayer.prototype._stopPollingForPosition = Player.prototype._stopPollingForPosition;
-
 class MiniSegmentPlayer extends BaseSegmentPlayer {
   /**
    * ITSLanguage MiniSegmentPlayer capable of working with segments without showing the scrubber.
@@ -520,15 +495,22 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
    */
   _getUI() {
     const id = this.playerId = guid.create();
-    const player = `
-      <!-- Container as play area. -->
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-      </p>`;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    playButton.appendChild(playIcon);
+
+    player.appendChild(playButton);
+
     return player;
   }
 
@@ -538,7 +520,7 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
    * @param {ui} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    ui.innerHTML = this._getUI();
+    ui.appendChild(this._getUI());
 
     const id = this.playerId;
     this.playtoggle = document.getElementById(id + 'playtoggle');

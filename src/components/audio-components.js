@@ -5,8 +5,7 @@
 
 require('./audio-components.css');
 const guid = require('guid');
-const Tools = require('itslanguage').Tools;
-
+const its = require('itslanguage');
 /**
  * @title ITSLanguage Javascript Audio
  * @overview This is part of the ITSLanguage Javascript SDK to perform audio related functions.
@@ -15,12 +14,87 @@ const Tools = require('itslanguage').Tools;
  * @author d-centralize
  */
 
+class BasePlayer {
+  constructor(options) {
+    this.settings = Object.assign({}, options);
+    this._writeUI(this.settings.element);
+
+    this.player = this.settings.player;
+
+    this.player.addEventListener('playing', () => {
+      this._setPlaying();
+    });
+
+    // The `canplay` event may have been fired already when the audio
+    // player was already initialised. Call _setPlayable() in that case.
+    if (this.player.canPlay()) {
+      this._setPlayable();
+    } else {
+      this.player.addEventListener('canplay', () => {
+        this._setPlayable();
+      });
+    }
+
+    this.player.addEventListener('playbackstopped', () => {
+      this._setNotPlaying();
+    });
+
+    this.player.addEventListener('error', () => {
+      this._setError();
+    });
+
+    this.player.addEventListener('unloaded', () => {
+      this._setNotPlayable();
+    });
+  }
+
+  _setPlaying() {
+    console.log('Playbutton set to playing state');
+    this.playtoggle.classList.add('playing');
+  }
+
+  _setNotPlaying() {
+    console.log('Playbutton set to non-playing state');
+    this.playtoggle.classList.remove('playing');
+  }
+
+  _setPlayable() {
+    console.log('Playbutton set to a playable state');
+    this.playtoggle.removeAttribute('disabled');
+  }
+
+  _setNotPlayable() {
+    console.log('Playbutton set to a non-playable state');
+    this.playtoggle.setAttribute('disabled', 'disabled');
+  }
+
+  _setError() {
+    this._setNotPlaying();
+    this.playtoggle.classList.add('error');
+  }
+
+  /**
+   * Appends the player GUI to the DOM.
+   *
+   * @param {element} ui The DOM element to append GUI to.
+   */
+  _writeUI(ui) {
+    const playerContent = this._getUI();
+    ui.appendChild(playerContent);
+    const id = this.playerId;
+    this.playtoggle = document.getElementById(id + 'playtoggle');
+    this.playtoggle.onclick = () => {
+      this.player.togglePlayback();
+    };
+  }
+}
+
 /**
  @module its
  ITSLanguage Audio module.
  */
 
-class Player {
+class Player extends BasePlayer {
   /**
    * ITSLanguage Audio module.
    *
@@ -29,60 +103,31 @@ class Player {
    *
    */
   constructor(options) {
-    this.settings = Object.assign({
-      // For smoother playback position indication, poll for position updates
-      // faster than the browser default (which is often ~250ms).
-      pollFreq: 75
-    }, options);
+    super(options);
 
-    this._writeUI(this.settings.element);
+    this.player.bindStopwatch(time => {
+      if (!this.draggerDown) {
+        const duration = this.totalDuration;
+        const text = Player._timerText(time / 10) + ' / ' + Player._timerText(duration);
+        _updateTimeIndication(this.timeindication, text);
+        this._positionUpdate(this.player);
+      }
+    });
 
-    this.player = this.settings.player;
-    const self = this;
-
-    this.player.addEventListener('playing', () => {
-      self._setPlaying();
-      self._startPollingForPosition(self.settings.pollFreq);
-    });
-    this.player.addEventListener('timeupdate', () => {
-      self._getTimeUpdate();
-    });
-    // In case the event was already fired, try to update audio stats.
-    this._timeUpdate();
-    this.player.addEventListener('durationchange', () => {
-      self._timeUpdate();
-    });
-    this.player.addEventListener('canplay', () => {
-      self._setPlayable();
-    });
-    // The `canplay` event may have been fired already when the audio
-    // player was already initialised. Call _setPlayable() in that case.
-    if (this.player.canPlay()) {
-      self._setPlayable();
-    }
-    this.player.addEventListener('ended', () => {
-      self._setNotPlaying();
-      self._stopPollingForPosition();
-    });
-    this.player.addEventListener('pause', () => {
-      self._setNotPlaying();
-      self._stopPollingForPosition();
-    });
     this.player.addEventListener('progress', () => {
-      self._loadingUpdate();
+      this._loadingUpdate();
     });
-    this.player.addEventListener('error', () => {
-      self._stopPollingForPosition();
-      self._setError();
+
+    this.player.addEventListener('durationchange', () => {
+      this.totalDuration = this.player.getDuration();
+      this._getTimeUpdate();
+      this._loadingUpdate();
     });
+
     this.player.addEventListener('unloaded', () => {
-      self._stopPollingForPosition();
-      self._setNotPlayable();
       // Sets the time to 0:00.0 / 0:00.0 when no audio is loaded.
-      self._getTimeUpdate();
+      this._getTimeUpdate();
     });
-    // In case the event was already fired, try to update audio stats.
-    self._loadingUpdate();
   }
 
   /**
@@ -110,7 +155,7 @@ class Player {
 
     const self = this;
     range.addEventListener('mousedown', e => {
-      self.draggerDown = true;
+      this.draggerDown = true;
       updateDragger(e);
       return false;
     });
@@ -123,11 +168,11 @@ class Player {
       // This event fires on all slider instances listening on document
       // mousup, therefore stop executing if this slider was not the
       // one starting the drag.
-      if (self.draggerDown === false) {
+      if (this.draggerDown === false) {
         return false;
       }
 
-      self.draggerDown = false;
+      this.draggerDown = false;
 
       // Seek audio when done scrubbing
       if (onDragEnd instanceof Function) {
@@ -176,20 +221,15 @@ class Player {
    * @param {element} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    const playerContent = this._getUI();
-    ui.innerHTML = playerContent;
+    super._writeUI(ui);
 
     const id = this.playerId;
-    this.playtoggle = document.getElementById(id + 'playtoggle');
     this.range = document.getElementById(id + 'range');
     this.loading = document.getElementById(id + 'loading');
     this.dragger = document.getElementById(id + 'dragger');
     this.timeindication = document.getElementById(id + 'timeindication');
 
     const self = this;
-    this.playtoggle.onclick = function() {
-      self.player.togglePlayback();
-    };
 
     function onDrag(pct) {
       // Update the playing time as it would be playing once the user
@@ -222,20 +262,42 @@ class Player {
    */
   _getUI() {
     const id = this.playerId = guid.create();
-    const player = `
-      <!-- Container as play area. -->
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-        <span id="${id}range" class="gutter">
-        <span id="${id}loading" class="loading"></span>
-          <button id="${id}dragger" class="handle" disabled></button>
-        </span>
-        <span id="${id}timeindication" class="timeindication"></span>
-      </p>`;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    const range = document.createElement('span');
+    range.id = id + 'range';
+    range.className = 'gutter';
+
+    const loading = document.createElement('span');
+    loading.id = id + 'loading';
+    loading.className = 'loading';
+
+    const dragger = document.createElement('button');
+    dragger.id = id + 'dragger';
+    dragger.className = 'handle';
+    dragger.disabled = true;
+
+    const timeIndication = document.createElement('span');
+    timeIndication.id = id + 'timeindication';
+    timeIndication.className = 'timeindication';
+
+    range.appendChild(dragger);
+    range.appendChild(loading);
+    playButton.appendChild(playIcon);
+    player.appendChild(playButton);
+    player.appendChild(range);
+    player.appendChild(timeIndication);
+
     return player;
   }
 
@@ -245,11 +307,15 @@ class Player {
    * @param {number} [seconds] Any number of seconds. Use float for high accuracy output.
    * @returns A duration in the form of mm:ss.nn (minutes, seconds, partial seconds).
    */
-  _timerText(seconds) {
-    const mins = Math.floor(seconds / 60, 10);
-    const secs = parseInt(seconds - mins * 60, 10);
-    const decimal = parseInt((seconds - mins * 60 - secs) * 10, 10);
-    return mins + ':' + (secs < 10 ? '0' + secs : secs) + '.' + decimal;
+  static _timerText(seconds) {
+    const date = new Date(seconds * 1000);
+    const mins = date.getMinutes();
+    let secs = date.getSeconds();
+    const ms = Math.floor(date.getMilliseconds() / 100);
+    if (secs < 10) {
+      secs = '0' + secs;
+    }
+    return mins + ':' + secs + '.' + ms;
   }
 
   /**
@@ -260,7 +326,7 @@ class Player {
    *   time.
    */
   _timeUpdate(pct) {
-    const duration = this.player.getDuration();
+    const duration = this.totalDuration;
     let offset = null;
     if (pct !== undefined) {
       // Display time while seeking, not currentTime in audio.
@@ -269,8 +335,8 @@ class Player {
       offset = this.player.getCurrentTime();
     }
 
-    const text = this._timerText(offset) + ' / ' + this._timerText(duration);
-    this._updateTimeIndication(text);
+    const text = Player._timerText(offset) + ' / ' + Player._timerText(duration);
+    _updateTimeIndication(this.timeindication, text);
   }
 
   /**
@@ -279,23 +345,14 @@ class Player {
    * Also update the GUI with this new position indication.
    */
   _positionUpdate() {
-    const duration = this.player.getDuration();
+    const duration = this.totalDuration;
     let pos = 0;
     // Prevent division by zero errors when no audio is loaded
     // and duration is 0.
     if (duration > 0) {
-      pos = this.player.getCurrentTime() * 100 / this.player.getDuration();
+      pos = this.player.getCurrentTime() * 100 / this.totalDuration;
     }
     this._updatePositionIndication(pos);
-  }
-
-  /**
-   * Update the time indication
-   *
-   * @param {string} text The time to show.
-   */
-  _updateTimeIndication(text) {
-    this.timeindication.innerHTML = text;
   }
 
   /**
@@ -323,99 +380,50 @@ class Player {
     }
   }
 
-  /**
-   * Start polling frequently for the current playing time of the audio.
-   * By default, browsers use resources very conservative and don't provide
-   * time updates frequently enough for the GUI to have a smooth slider.
-   *
-   * @param {number} pollFreq The polling frequency in milliseconds.
-   */
-  _startPollingForPosition(pollFreq) {
-    const self = this;
-    if (this.pollInterval || !pollFreq) {
-      return;
-    }
-
-    console.log('Start polling for audio position.');
-    this.pollInterval = setInterval(() => {
-      self._getTimeUpdate();
-    }, pollFreq);
-  }
-
-  /**
-   * Stop polling for the current playing time of the audio.
-   */
-  _stopPollingForPosition() {
-    if (this.pollInterval) {
-      console.log('Stopped polling for audio position.');
-      clearInterval(this.pollInterval);
-      this.pollInterval = null;
-    }
-  }
-
-  _setPlaying() {
-    console.log('Playbutton set to playing state');
-    this.playtoggle.classList.add('playing');
-  }
-
-  _setNotPlaying() {
-    console.log('Playbutton set to non-playing state');
-    this.playtoggle.classList.remove('playing');
-  }
-
   _setPlayable() {
-    console.log('Playbutton set to a playable state');
-    this.playtoggle.removeAttribute('disabled');
+    super._setPlayable();
+    this._timeUpdate(0);
     if (this.dragger) {
       this.dragger.removeAttribute('disabled');
     }
   }
 
   _setNotPlayable() {
-    console.log('Playbutton set to a non-playable state');
-    this.playtoggle.setAttribute('disabled', 'disabled');
+    super._setNotPlayable();
     if (this.dragger) {
       this.dragger.setAttribute('disabled', 'disabled');
     }
   }
-
-  _setError() {
-    this._setNotPlaying();
-    this.playtoggle.classList.add('error');
-  }
 }
 
-class MiniPlayer {
+class MiniPlayer extends BasePlayer {
   /**
    * Defines the miniplayer GUI.
    *
    */
   _getUI() {
     const id = this.playerId = guid.create();
-    const player = `
-      <!-- Container as play area. -->
-      <p class="player">
-        <!-- Play button container class -->
-        <button id="${id}playtoggle" class="playToggle" disabled>
-          <!-- Play icon -->
-          <div class="icon"></div>
-        </button>
-      </p>`;
+
+    const player = document.createElement('p');
+    player.className = 'player';
+
+    const playButton = document.createElement('button');
+    playButton.id = id + 'playtoggle';
+    playButton.className = 'playToggle';
+    playButton.disabled = true;
+
+    const playIcon = document.createElement('div');
+    playIcon.className = 'icon';
+
+    playButton.appendChild(playIcon);
+
+    player.appendChild(playButton);
+
     return player;
   }
 
-  /* These GUI related callbacks should be ignored in this subclass */
-
-  _applyRangeSlider(range, dragger, onDrag, onDragEnd) {
-  }
-
-  _updateTimeIndication(text) {
-  }
-
-  _loadingUpdate() {
-  }
-
-  _updatePositionIndication(pct) {
+  _writeUI(ui) {
+    super._writeUI(ui);
   }
 }
 
@@ -515,7 +523,7 @@ class VolumeCanvas {
   }
 }
 
-class Recorder extends Player {
+class Recorder {
   /**
    * ITSLanguage Record component.
    *
@@ -523,12 +531,14 @@ class Recorder extends Player {
    * @param {object} [options] Override any of the default settings.
    */
   constructor(options) {
-    super(Object.assign({
+    this.settings = Object.assign({
       // In seconds
       maxRecordingDuration: 10
-    }, options));
+    }, options);
 
-    this._drawingCompatibility();
+    this._writeUI(this.settings.element);
+
+    Recorder._drawingCompatibility();
 
     this.recorder = this.settings.recorder;
 
@@ -537,11 +547,14 @@ class Recorder extends Player {
       this._permitRecorder();
     }
     // .. or an event will trigger soon.
-    this.recorder.addEventListener('ready', () => {
+    this.recorder.addEventListener('ready', (audioContext, inputStream) => {
+      const volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
+      this.attachVolumeMeter(volumeMeter);
+      this._updateTimer(0);
       this._permitRecorder();
     });
 
-    this.stopwatch = new Tools.Stopwatch(elapsed => {
+    this.recorder.bindStopwatch(elapsed => {
       const seconds = elapsed / 10;
       this._updateTimer(seconds);
       if (this.settings.maxRecordingDuration &&
@@ -551,64 +564,18 @@ class Recorder extends Player {
     });
     this.recorder.addEventListener('recording', id => {
       this.dot.classList.remove('off');
-      this.stopwatch.reset();
-      this.stopwatch.start();
     });
 
-    this.recorder.addEventListener('recorded', (id, blob, forced) => {
-      this.stopwatch.stop();
+    this.recorder.addEventListener('recorded', () => {
       this.dot.classList.add('off');
-
-      const blobUrl = window.URL.createObjectURL(blob);
-      this.player.load(blobUrl);
     });
-
-    // The addEventListener interface exists on object.Element DOM elements.
-    // However, this is just a simple class without any relation to the DOM.
-    // Therefore we have to implement a pub/sub mechanism ourselves.
-    // See:
-    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget.addEventListener
-    // http://stackoverflow.com/questions/10978311/implementing-events-in-my-own-object
-    this.events = {};
-
-    this.addEventListener = (name, handler) => {
-      if (this.events.hasOwnProperty(name)) {
-        this.events[name].push(handler);
-      } else {
-        this.events[name] = [handler];
-      }
-    };
-
-    this.removeEventListener = (name, handler) => {
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-
-      const index = this.events[name].indexOf(handler);
-      if (index !== -1) {
-        this.events[name].splice(index, 1);
-      }
-    };
-
-    this.fireEvent = (name, args) => {
-      if (!this.events.hasOwnProperty(name)) {
-        return;
-      }
-      if (!args) {
-        args = [];
-      }
-
-      for (const ev of this.events[name]) {
-        ev(...args);
-      }
-    };
   }
 
   /**
    * Logs browser compatibility for canvas drawing.
    * In case of compatibility issues, an error is thrown.
    */
-  _drawingCompatibility() {
+  static _drawingCompatibility() {
     // Canvas (basic support)
     // Method of generating fast, dynamic graphics using JavaScript.
     // http://caniuse.com/#feat=canvas
@@ -626,9 +593,8 @@ class Recorder extends Player {
    * @param {element} ui The DOM element to append GUI to.
    */
   _writeUI(ui) {
-    // Call super
-    super._writeUI(ui);
-
+    const playerContent = this._getUI();
+    ui.appendChild(playerContent);
     const id = this.playerId;
     this.recordtoggle = document.getElementById(id + 'recordtoggle');
     this.dot = document.getElementById(id + 'dot');
@@ -637,11 +603,6 @@ class Recorder extends Player {
     this.recordtoggle.onclick = () => {
       if (this.recorder.hasUserMediaApproval()) {
         this.recorder.toggleRecording();
-        if (this.recorder.isRecording()) {
-          this.fireEvent('recording');
-        } else {
-          this.fireEvent('recorded');
-        }
       } else {
         this.recorder.requestUserMedia();
       }
@@ -660,24 +621,38 @@ class Recorder extends Player {
    *
    */
   _getUI() {
-    // Call super
-    const player = super._getUI();
-    const id = this.playerId;
-    const recorder = `
-      <!-- Container to place recording area to the left of the play area. -->
-      <div class="recorder">
-        <!-- VU meter ring -->
-        <canvas id="${id}canvas" class="canvas"></canvas>
-        <!-- Record button container class -->
-        <button id="${id}recordtoggle" class="recordToggle noPermission">
-          <!-- Microphone icon -->
-          <div class="icon"></div>
-          <!-- Red pulsating dot -->
-          <div id="${id}dot" class="pulse off"></div>
-        </button>
-      </div>`;
-    const wrapper = '<div class="combinator">' + recorder + player + '</div>';
-    return wrapper;
+    const id = this.playerId = guid.create();
+
+    const recorder = document.createElement('div');
+    recorder.className = 'recorder';
+
+    const timeIndication = document.createElement('span');
+    timeIndication.id = id + 'timeindication';
+    timeIndication.className = 'timeindication';
+
+    const canvas = document.createElement('canvas');
+    canvas.id = id + 'canvas';
+    canvas.className = 'canvas';
+
+    const recordingButton = document.createElement('button');
+    recordingButton.id = id + 'recordtoggle';
+    recordingButton.className = 'recordToggle noPermission';
+
+    const microphoneIcon = document.createElement('div');
+    microphoneIcon.className = 'icon';
+
+    const pulsatingDot = document.createElement('div');
+    pulsatingDot.id = id + 'dot';
+    pulsatingDot.className = 'pulse off';
+
+    recordingButton.appendChild(microphoneIcon);
+    recordingButton.appendChild(pulsatingDot);
+
+    recorder.appendChild(canvas);
+    recorder.appendChild(recordingButton);
+    recordingButton.appendChild(timeIndication);
+
+    return recorder;
   }
 
   _permitRecorder() {
@@ -722,9 +697,19 @@ class Recorder extends Player {
    * @param {number} elapsed Amount of time passed (in seconds) since recording started.
    */
   _updateTimer(elapsed) {
-    const text = this._timerText(elapsed) + ' / ' + this._timerText(this.settings.maxRecordingDuration);
-    this._updateTimeIndication(text);
+    const text = Player._timerText(elapsed) + ' / ' + Player._timerText(this.settings.maxRecordingDuration);
+    _updateTimeIndication(this.timeindication, text);
   }
+}
+
+/**
+ * Update the time indication
+ *
+ * @param {HTMLElement} element The element to update the time indication for.
+ * @param {string} text The time to show.
+ */
+function _updateTimeIndication(element, text) {
+  element.innerHTML = text;
 }
 
 module.exports = {
