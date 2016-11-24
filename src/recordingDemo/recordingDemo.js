@@ -137,11 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
   connection.getOauth2Token(existingBasicAuth)
     // Obtain an OAuth2 Token, assuming the role of this student.
     .then(() => connection.getOauth2Token(existingBasicAuth, existingOrganization.id, existingStudent.id))
-    .then(jwt => {
-      connection.settings.oAuth2Token = jwt.access_token;
-    })
     // Connect to the websocket as this student.
-    .then(() => connection.webSocketConnect(connection.settings.oAuth2Token))
+    .then(() => connection.webSocketConnect())
     .catch(error => {
       console.error('errored', error);
     });
