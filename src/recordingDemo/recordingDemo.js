@@ -33,7 +33,7 @@
  * - id: recording
  */
 
-require('./recordingDemo.css');
+require('../css/demo.css');
 const its = require('itslanguage');
 const settings = require('../demo/settings.json');
 const UIComponents = require('../components/audio-components');
