@@ -1,4 +1,4 @@
-require('./demo.css');
+require('../css/demo.css');
 const Raven = require('raven-js');
 const its = require('itslanguage');
 
