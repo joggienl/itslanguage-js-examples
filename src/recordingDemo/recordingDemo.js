@@ -111,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const speechRecordingController = new its.SpeechRecordingController(connection);
 
   function startRecordingSession() {
+    const downloadUrl = document.getElementById('downloadUrl');
+    downloadUrl.setAttribute('disabled', 'disabled');
+
     speechRecordingController.startStreamingSpeechRecording(existingRecordingChallenge, recorder)
       .progress(() => {
         // The progress call gets used when the internal setup to receive audio is done. It is advised to enable
@@ -121,6 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // You can load the audio here as well.
 
         // player.load(result.audioUrl);
+
+        // Set download url.
+        downloadUrl.value = result.audioUrl;
+        downloadUrl.removeAttribute('disabled');
 
         // Start another session when done.
         startRecordingSession();
