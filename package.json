@@ -19,7 +19,7 @@
   "homepage": "https://github.com/itslanguage/itslanguage-js-examples#readme",
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "itslanguage": "^0.10",
+    "itslanguage": "^0.2.0",
     "raven-js": "^3.7.0"
   },
   "devDependencies": {
