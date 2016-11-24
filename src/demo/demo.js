@@ -88,12 +88,12 @@ function connect() {
       'connection').value = 'No ITSLanguage connection';
   });
 
-  //Create a BasicAuth with your credentials.
+  // Create a BasicAuth with your credentials.
   const basicAuth = new its.BasicAuth(config.authPrincipal, config.authPrincipal, config.authCredentials);
-  //For demo purposes, organisation and student are set to dummy.
+  // For demo purposes, organisation and student are set to dummy.
   sdk.getOauth2Token(basicAuth, 'dummy', 'dummy')
     .then(result => {
-      //Set the token.
+      // Set the token.
       sdk.settings.oAuth2Token = result.access_token;
       sdk.webSocketConnect(sdk.settings.oAuth2Token);
     })

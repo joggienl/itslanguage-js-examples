@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     recorder
   });
 
-  //Disable the recorder so no audio can be sent before the system is not ready.
+  // Disable the recorder so no audio can be sent before the system is not ready.
   UIRecorder.disableRecorder();
 
   new UIComponents.Player({
