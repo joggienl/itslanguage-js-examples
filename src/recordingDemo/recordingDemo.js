@@ -92,6 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const tenantId = settings.API_TENANT_ID;
   const principal = settings.API_PRINCIPAL;
   const credentials = settings.API_CREDENTIALS;
+  const organizationId = 'dummy';
+  const organizationName = 'dummy';
+  const studentId = 'dummy';
+  const studentName = 'dummy';
 
   // Request microphone access.
   recorder.requestUserMedia();
@@ -99,8 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Represent the existing entities in the database for clarity.
   const existingTenant = new its.Tenant(tenantId, tenantId);
   const existingBasicAuth = new its.BasicAuth(existingTenant.id, principal, credentials);
-  const existingOrganization = new its.Organisation('dummy', 'dummy');
-  const existingStudent = new its.Student(existingOrganization.id, 'dummy', 'dummy');
+  const existingOrganization = new its.Organisation(organizationId, organizationName);
+  const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
   const existingRecordingChallenge = new its.SpeechChallenge(existingOrganization.id, settings.RECORDING_CHALLENGE_ID,
     'dummy');
 
