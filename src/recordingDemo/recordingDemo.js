@@ -38,7 +38,7 @@ const its = require('itslanguage');
 const settings = require('../demo/settings.json');
 const UIComponents = require('../components/audio-components');
 const SegmentPlayer = require('../components/audio-components-segmentplayer');
-const generateWaveSample = require('itslanguage').AudioTools.generateWaveSample;
+const generateWaveSample = require('itslanguage/audio-tools');
 
 document.addEventListener('DOMContentLoaded', () => {
   // Create the audio players and recorders.
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const recorder = new its.AudioRecorder({forceWave: true});
 
   // Load one auto generated wave file.
-  player2.load(generateWaveSample(2));
+  player2.load(generateWaveSample.generateWaveSample(2));
 
   // Once the recorder has finished recording, load the blob file into the player.
   // Loading an audio file can also be done in the result handler of the .StartStreamingSpeechRecording method.

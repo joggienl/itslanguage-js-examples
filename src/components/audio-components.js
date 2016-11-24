@@ -549,12 +549,11 @@ class Recorder {
     }
     // .. or an event will trigger soon.
     this.recorder.addEventListener('ready', (audioContext, inputStream) => {
-      const volumeMeter = new its.AudioTools.VolumeMeter(audioContext, inputStream);
+      const volumeMeter = new its.VolumeMeter(audioContext, inputStream);
       this.attachVolumeMeter(volumeMeter);
       this._updateTimer(0);
       this._permitRecorder();
     });
-
     this.recorder.bindStopwatch(elapsed => {
       const seconds = elapsed / 10;
       this._updateTimer(seconds);

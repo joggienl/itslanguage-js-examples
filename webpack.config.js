@@ -38,6 +38,13 @@ module.exports = {
       {
         test: /\.(woff|woff2|ttf|eot|svg)$/,
         loader: 'file'
+      },
+      {
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015-loose']
+        }
       }
     ]
   },
