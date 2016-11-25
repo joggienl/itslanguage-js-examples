@@ -6,7 +6,8 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
     demo: path.resolve(__dirname, 'src/demo/demo.js'),
-    recordingDemo: path.resolve(__dirname, 'src/recordingDemo/recordingDemo.js')
+    recordingDemo: path.resolve(__dirname, 'src/recordingDemo/recordingDemo.js'),
+    analysisDemo: path.resolve(__dirname, 'src/analysisDemo/analysisDemo.js')
   },
   devServer: {
     contentBase: './src',

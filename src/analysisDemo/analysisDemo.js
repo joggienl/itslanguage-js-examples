@@ -155,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // You can load the audio here as well.
         // player.load(result.audioUrl);
 
-        // Display results against the reference
-        detailedScoresComponent.show(referenceAlignment.words, result.analysis.words);
+        // Display results.
+        detailedScoresComponent.showResults(result.analysis.words);
         const table = detailedScores.children[0];
         table.classList.add('table');
         table.classList.add('table-striped');

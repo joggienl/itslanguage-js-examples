@@ -165,6 +165,76 @@ class DetailedScores {
     this.settings.element.appendChild(table);
   }
 
+  showResults(words) {
+    // Empty the element, in case any previous sentences were shown.
+    this.settings.element.innerHTML = '';
+    const table = document.createElement('table');
+
+    // Assemble header
+    let row = document.createElement('tr');
+    let column1 = document.createElement('th');
+    column1.innerText = 'Grapheme (IPA)';
+    row.appendChild(column1);
+    let column2 = document.createElement('th');
+    column2.innerText = 'Confidence Score';
+    row.appendChild(column2);
+    let column3 = document.createElement('th');
+    column3.innerText = 'Duration';
+    row.appendChild(column3);
+    table.appendChild(row);
+
+    let lastEnd = 0;
+    words.forEach((word, i) => {
+      word.chunks.forEach((chunk, j) => {
+        chunk.phonemes.forEach((phoneme, k) => {
+          const refPhoneme = words[i].chunks[j].phonemes[k];
+          const refDuration = refPhoneme.end - refPhoneme.start;
+
+          // Insert silence
+          if (lastEnd !== phoneme.start) {
+            row = document.createElement('tr');
+            column1 = document.createElement('td');
+            column1.innerHTML = '(sil)';
+            row.appendChild(column1);
+            column2 = document.createElement('td');
+            row.appendChild(column2);
+            column3 = document.createElement('td');
+            const silDuration = phoneme.start - lastEnd;
+            column3.innerHTML = `${silDuration.toFixed(2)}s (ref ${refDuration.toFixed(2)}s)`;
+            row.appendChild(column3);
+            table.appendChild(row);
+          }
+
+          row = document.createElement('tr');
+          column1 = document.createElement('td');
+          column1.innerHTML = chunk.graphemes + '(' + phoneme.ipa + ')';
+          if (this.settings.thresholdGood && this.settings.thresholdBad) {
+            if (phoneme.score >= this.settings.thresholdGood) {
+              column1.classList.add('good');
+            } else if (phoneme.score <= this.settings.thresholdBad) {
+              column1.classList.add('bad');
+            } else {
+              column1.classList.add('moderate');
+            }
+          }
+          row.appendChild(column1);
+          column2 = document.createElement('td');
+          column2.innerHTML = phoneme.score;
+          row.appendChild(column2);
+          column3 = document.createElement('td');
+          const duration = phoneme.end - phoneme.start;
+          column3.innerHTML = `${duration.toFixed(2)}s (ref ${refDuration.toFixed(2)}s)`;
+          row.appendChild(column3);
+          table.appendChild(row);
+
+          lastEnd = phoneme.end;
+        });
+      });
+    });
+    this.settings.element.appendChild(table);
+  }
+
+
   /**
    * Reset the table to its neutral state.
    */
