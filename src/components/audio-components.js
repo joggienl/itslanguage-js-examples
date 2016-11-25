@@ -30,11 +30,11 @@ class BasePlayer {
     // player was already initialised. Call _setPlayable() in that case.
     if (this.player.canPlay()) {
       this._setPlayable();
-    } else {
-      this.player.addEventListener('canplay', () => {
-        this._setPlayable();
-      });
     }
+
+    this.player.addEventListener('canplay', () => {
+      this._setPlayable();
+    });
 
     this.player.addEventListener('playbackstopped', () => {
       this._setNotPlaying();
@@ -71,6 +71,7 @@ class BasePlayer {
 
   _setError() {
     this._setNotPlaying();
+    this._setNotPlayable();
     this.playtoggle.classList.add('error');
   }
 
@@ -128,7 +129,9 @@ class Player extends BasePlayer {
     this.player.addEventListener('unloaded', () => {
       // Sets the time to 0:00.0 / 0:00.0 when no audio is loaded.
       this._getTimeUpdate();
+      this._positionUpdate();
     });
+    this._getTimeUpdate();
   }
 
   /**
