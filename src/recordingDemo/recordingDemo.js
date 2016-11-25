@@ -37,31 +37,17 @@ require('../css/demo.css');
 const its = require('itslanguage');
 const settings = require('../demo/settings.json');
 const UIComponents = require('../components/audio-components');
-const SegmentPlayer = require('../components/audio-components-segmentplayer');
-const generateWaveSample = require('itslanguage/audio-tools');
 
 document.addEventListener('DOMContentLoaded', () => {
   // Create the audio players and recorders.
   const player = new its.AudioPlayer();
-  const player2 = new its.AudioPlayer();
   const recorder = new its.AudioRecorder({forceWave: true});
-
-  // Load one auto generated wave file.
-  player2.load(generateWaveSample.generateWaveSample(2));
 
   // Once the recorder has finished recording, load the blob file into the player.
   // Loading an audio file can also be done in the result handler of the .StartStreamingSpeechRecording method.
   recorder.addEventListener('recorded', (id, blob) => {
     // Load the audio and use the callback when the audio is loaded in.
-    player.load(URL.createObjectURL(blob), null, sound => {
-      // Create a SegmentPlayer capable of playing multiple audio files in one player.
-      new SegmentPlayer.SegmentPlayer({
-        element: document.getElementById('segmentplayer'),
-        players: [player, player2],
-        origins: [document.getElementById('player'), player2],
-        durations: [sound.duration, player2.getDuration()]
-      });
-    });
+    player.load(URL.createObjectURL(blob));
   });
 
   // Create the UI elements linked with the ITSLanguage players and recorders.
@@ -76,11 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
   new UIComponents.Player({
     element: document.getElementById('player'),
     player
-  });
-
-  new UIComponents.Player({
-    element: document.getElementById('player2'),
-    player: player2
   });
 
   // Setup the SDK.
@@ -121,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         UIRecorder.enableRecorder();
       })
       .then(result => {
+        UIRecorder.disableRecorder();
         // You can load the audio here as well.
 
         // player.load(result.audioUrl);
@@ -134,6 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(error => {
         console.error('errored', error);
+        UIRecorder.disableRecorder();
+        // Try again
+        startRecordingSession();
       });
   }
 
