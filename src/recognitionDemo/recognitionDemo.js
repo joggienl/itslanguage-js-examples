@@ -34,7 +34,7 @@
 require('./index.html');
 require('../css/demo.css');
 const its = require('itslanguage');
-const settings = require('../demo/settings.json');
+const settings = require('../settings/settings.json');
 const UIComponents = require('../components/audio-components');
 
 document.addEventListener('DOMContentLoaded', () => {
