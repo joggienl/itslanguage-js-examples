@@ -20,7 +20,8 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "itslanguage": "^0.2.0",
-    "raven-js": "^3.7.0"
+    "raven-js": "^3.7.0",
+    "wavesurfer.js": "^1.2.6"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
