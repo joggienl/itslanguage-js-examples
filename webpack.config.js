@@ -13,6 +13,7 @@ module.exports = {
     demo: path.resolve(__dirname, 'src/demo/demo.js'),
     recordingDemo: path.resolve(__dirname, 'src/recordingDemo/recordingDemo.js'),
     analysisDemo: path.resolve(__dirname, 'src/analysisDemo/analysisDemo.js'),
+    recognitionDemo: path.resolve(__dirname, 'src/recognitionDemo/recognitionDemo.js'),
     audioReferenceDemo: path.resolve(__dirname, 'src/audioReferenceDemo/audioReferenceDemo.js')
   },
   devServer: {
