@@ -1,7 +1,7 @@
 {
   "API_URL": "https://api-dot-itsl-pilot.itsapi.com",
-  "API_PRINCIPAL": "pilot",
-  "API_TENANT_ID": "pilot",
+  "API_PRINCIPAL": "demo",
+  "API_TENANT_ID": "demo",
   "API_CREDENTIALS": "pilotpassword",
   "API_WS_URL": "wss://mvm-dot-itsl-pilot.itsapi.com:9000",
   "RECORDING_CHALLENGE_ID": "recording",
