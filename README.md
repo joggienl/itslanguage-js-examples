@@ -33,17 +33,16 @@ By default, the project will be accessible on localhost:3000.
 
 ## API Reference
 
-The examples contained in this project detail every use case that is possible with the ITSLanguage SDK. Most are very simple, such as
-creating and pulling data to and from a server. Other use cases, such as streaming, require more in depth interaction with a frontend
-page, such as creating an audio recorder on an HTML page.
-As such, we have supplied a simple interpretation of how this could be used. You are free to copy this.
-Should you want to create your own implementation see the section about Streaming.
+The demos contained in this project detail the streaming use cases that are possible with the ITSLanguage SDK. This includes 
+speech recording, speech analysis and speech recognition. A sample implementation of audio players and recorder are also available
+to use. You are free to copy this.
+Should you want to create your own implementation see the SDK Docs on the audio players and audio recorders.
 
 The SDK uses [ES6](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 and [WhenJS Promises](https://github.com/cujojs/when) to deliver information and any error messages to you.
 See their documentation for more information.
 
-Some common use cases are available below.
+Some sample use cases are available below.
 
 ## Examples
 
@@ -58,8 +57,6 @@ a login name and password in a JSON object:
 ```javascript
 information = {
     apiUrl: <RESTurl>,
-    authPrincipal: <username>,
-    authCredentials: <password>,
     wsUrl: <websocketUrl>
 }
 ```
@@ -71,14 +68,13 @@ connection = new its.Connection(information);
 
 #### Websocket
 
-To connect to the websocket server you will need to request a token from our server.
-This token can be requested per tenant that needs one. Be sure a tenant exists and has been created in our database.
-Then you need to create a `BasicAuth` object. This fills in server generated credentials to request a token with.
+To connect to the websocket server you will need to request an OAuth2 token from our server. For more information see the [REST API
+documentation](https://itslanguage.github.io/itslanguage-docs/)
 ```javascript
 tenant = new its.Tenant('1', 'John');
 basicAuth = new its.BasicAuth(tenant.name);
-basicAuthController = new its.BasicAuthController(connection);
-basicAuthController.createBasicAuth(basicAuth)
+sdk = new its.AdministrativeSDK(connection);
+sdk.createBasicAuth(basicAuth)
     .then(result => {
         basicAuth = result;
     });
@@ -87,9 +83,7 @@ basicAuthController.createBasicAuth(basicAuth)
 Then it's a simple matter of requesting a token and using it to connect to the websocket server.
 ```javascript
 connection.getOauth2Token(basicAuth)
-    .then(result => {
-        connection.webSocketConnect(result.access_token);
-    });
+    .then(() => connection.webSocketConnect());
 ```
 For information on how to listen if the connection was successful or not, see the examples in the project.
 
@@ -97,22 +91,21 @@ For information on how to listen if the connection was successful or not, see th
 
 All of the REST use cases are quite simple. The workflow goes like this:
 1. Create the object that you need processed.
-2. Create the corresponding controller of the object.
-3. Use the controller.
-4. React to the results.
+3. Use the AdministrativeSDK object.
+4. Use the results.
 
 To create a new Student in our database:
 ```javascript
 student = new its.Student(<parameters>);
-studentController = new its.StudentController(connection);
-studentController.createStudent(student)
-    .then(result => {console.log('Success! Got ' + result));
-    .catch(error => {console.log('Encountered error ' + error + '!'));
+sdk = new its.AdministrativeSDK(connection);
+sdk.createStudent(student)
+    .then(result => console.log('Success! Got ' + result));
+    .catch(error => console.log('Encountered error ' + error + '!'));
 ```
 A successful result will in this case return the object you submitted with the new properties `created` and `updated`.
 Sometimes an id can also be generated.
 A rejected result is an object with either a `message` string or an `errors` object with detailed errors.
-For more information see the examples in the project.
+For more information read the SDK Docs.
 
 ## Streaming
 
@@ -120,9 +113,9 @@ To stream audio, an HTML component along with backing JavaScript will need to be
 you to create, so we have supplied our own implementation free for use.
 Nevertheless, to register a component with the SDK:
 ```javascript
-itsRecorder = new its.AudioRecorder({forceWave: true});   //Internal representation of an audio recorder.
-GUIrecorder = document.getElementById('recorder');        //Div of the custom HTML element representing a recorder.
-recorderUI = new uicomps.Recorder({
+itsRecorder = new its.AudioRecorder({forceWave: true});   //Internal representation of an audio recorder. Force wave format recording.
+recorderDiv = document.getElementById('recorder');        //Div of the custom HTML element representing a recorder.
+recorderUI = new uicomps.Recorder({                       //uicomps is a home made library that links HTML elements to the internal audio functionality.
   element: GUIrecorder,
   recorder: itsRecorder,
   maxRecordingDuration: 200
@@ -139,8 +132,8 @@ the incoming recording.
 ```javascript
 challenge = new its.SpeechChallenge('fb');
 challenge.topic = 'ExamQuestion4';
-challengeController = new its.SpeechChallengeController(connection);
-challengeController.createSpeechChallenge(challenge)
+sdk = new its.AdministrativeSDK(connection);
+sdk.createSpeechChallenge(challenge)
     .then(result => {
         challenge = result;
         })
@@ -150,7 +143,7 @@ challengeController.createSpeechChallenge(challenge)
 ```
 And then start streaming:
 ```javascript
-challengeController.startStreamingSpeechRecording(challenge, rec)
+sdk.startStreamingSpeechRecording(challenge, rec)
     .then(result => {
         console.log('Success!');
         })
@@ -159,3 +152,5 @@ challengeController.startStreamingSpeechRecording(challenge, rec)
         })
 ```
 It will continue to pull audio from the recorder until an event to stop has been fired. For more information see the examples.
+
+**Warning** These examples are very simple and not detailed. See the examples for more information about event listening and audio handling.
