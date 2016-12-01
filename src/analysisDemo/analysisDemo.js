@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
   config.apiUrl = settings.API_URL;
   config.wsUrl = settings.API_WS_URL;
   const connection = new its.Connection(config);
+  const sdk = new its.AdministrativeSDK(connection);
   const organizationId = 'dummy';
   const organizationName = 'dummy';
   const studentId = 'dummy';
@@ -101,20 +102,17 @@ document.addEventListener('DOMContentLoaded', () => {
   recorder.requestUserMedia();
 
   // Represent the existing entities in the database for clarity.
-  const existingTenant = new its.Tenant(tenantId, tenantId);
-  const existingBasicAuth = new its.BasicAuth(existingTenant.id, principal, credentials);
+  const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
   const existingPronunciationChallenge = new its.PronunciationChallenge(existingOrganization.id,
     settings.ANALYSIS_CHALLENGE_ID, analysisPrompt);
 
-  const pronunciationAnalysisController = new its.PronunciationAnalysisController(connection);
-
   function startAnalysisSession() {
     const downloadUrl = document.getElementById('downloadUrl');
     downloadUrl.setAttribute('disabled', 'disabled');
 
-    pronunciationAnalysisController.startStreamingPronunciationAnalysis(existingPronunciationChallenge, recorder)
+    sdk.startStreamingPronunciationAnalysis(existingPronunciationChallenge, recorder)
       .progress(result => {
         // The progress call gets used when the internal setup to receive audio is done AND when receiving the audio
         // alignment. It is advised to enable recording functionality this way.
@@ -186,11 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Obtain a new token, assuming the role of this student.
   connection.getOauth2Token(existingBasicAuth, existingOrganization.id, existingStudent.id)
-      .then(jwt => {
-        connection.settings.oAuth2Token = jwt.access_token;
-      })
       // Connect to the websocket as this student.
-      .then(() => connection.webSocketConnect(connection.settings.oAuth2Token))
+      .then(() => connection.webSocketConnect())
       .catch(error => {
         console.error('errored', error);
       });

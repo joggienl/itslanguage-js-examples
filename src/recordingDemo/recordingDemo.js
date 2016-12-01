@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   config.apiUrl = settings.API_URL;
   config.wsUrl = settings.API_WS_URL;
   const connection = new its.Connection(config);
+  const sdk = new its.AdministrativeSDK(connection);
 
   const tenantId = settings.API_TENANT_ID;
   const principal = settings.API_PRINCIPAL;
@@ -82,20 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
   recorder.requestUserMedia();
 
   // Represent the existing entities in the database for clarity.
-  const existingTenant = new its.Tenant(tenantId, tenantId);
-  const existingBasicAuth = new its.BasicAuth(existingTenant.id, principal, credentials);
+  const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
   const existingRecordingChallenge = new its.SpeechChallenge(existingOrganization.id, settings.RECORDING_CHALLENGE_ID,
     'dummy');
 
-  const speechRecordingController = new its.SpeechRecordingController(connection);
-
   function startRecordingSession() {
     const downloadUrl = document.getElementById('downloadUrl');
     downloadUrl.setAttribute('disabled', 'disabled');
 
-    speechRecordingController.startStreamingSpeechRecording(existingRecordingChallenge, recorder)
+    sdk.startStreamingSpeechRecording(existingRecordingChallenge, recorder)
       .progress(() => {
         // The progress call gets used when the internal setup to receive audio is done. It is advised to enable
         // recording functionality this way.
@@ -126,9 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startRecordingSession();
   });
 
-  connection.getOauth2Token(existingBasicAuth)
-    // Obtain an OAuth2 Token, assuming the role of this student.
-    .then(() => connection.getOauth2Token(existingBasicAuth, existingOrganization.id, existingStudent.id))
+  connection.getOauth2Token(existingBasicAuth, existingOrganization.id, existingStudent.id)
     // Connect to the websocket as this student.
     .then(() => connection.webSocketConnect())
     .catch(error => {
