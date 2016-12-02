@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --hot --inline --progress --color --port 3000",
-    "test": "eslint ."
+    "test": "eslint .",
+    "build": "webpack -p --progress"
   },
   "repository": {
     "type": "git",
