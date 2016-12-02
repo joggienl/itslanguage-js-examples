@@ -32,7 +32,7 @@
  * SpeechChallenge:
  * - id: recording
  */
-
+require('./index.html');
 require('../css/demo.css');
 const its = require('itslanguage');
 const settings = require('../demo/settings.json');

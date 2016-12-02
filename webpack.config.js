@@ -1,5 +1,6 @@
 const path = require('path');
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
 
@@ -27,7 +28,7 @@ module.exports = {
     loaders: [
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: ExtractTextPlugin.extract('html')
       },
       {
         test: /\.json$/,
@@ -38,7 +39,7 @@ module.exports = {
         loader: 'style!css'
       },
       {
-        test: /\.(woff|woff2|ttf|eot|svg)$/,
+        test: /\.(png|woff|woff2|ttf|eot|svg)$/,
         loader: 'file'
       },
       {
@@ -52,6 +53,7 @@ module.exports = {
   },
   externals: ['ws'],
   plugins: [
-    new webpack.ContextReplacementPlugin(/bindings$/, /^$/)
+    new webpack.ContextReplacementPlugin(/bindings$/, /^$/),
+    new ExtractTextPlugin('[name]/index.html')
   ]
 };

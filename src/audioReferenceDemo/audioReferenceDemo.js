@@ -5,7 +5,7 @@ WaveSurfer
 /**
  * This is a demo showcasing the different styles of every homebuilt player.
  */
-
+require('./index.html');
 require('../css/demo.css');
 const its = require('itslanguage');
 const UIComponents = require('../components/audio-components');
@@ -247,5 +247,3 @@ document.addEventListener('DOMContentLoaded', () => {
   waveSurferPlayer.load(generatedAudio);
   wavesurfer.load(generatedAudio);
 });
-
-
