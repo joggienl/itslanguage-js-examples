@@ -21,7 +21,7 @@ module.exports = {
   },
   output: {
     path: outputPath,
-    publicPath: '/',
+    publicPath: '../',
     filename: '[name]/[name].js'
   },
   devtool: 'inline-source-map',
