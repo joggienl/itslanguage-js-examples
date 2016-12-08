@@ -51,12 +51,12 @@ class BasePlayer {
 
   _setPlaying() {
     console.log('Playbutton set to playing state');
-    this.playtoggle.classList.add('playing');
+    this.playtoggle.classList.add('itslanguage-playing');
   }
 
   _setNotPlaying() {
     console.log('Playbutton set to non-playing state');
-    this.playtoggle.classList.remove('playing');
+    this.playtoggle.classList.remove('itslanguage-playing');
   }
 
   _setPlayable() {
@@ -72,7 +72,7 @@ class BasePlayer {
   _setError() {
     this._setNotPlaying();
     this._setNotPlayable();
-    this.playtoggle.classList.add('error');
+    this.playtoggle.classList.add('itslanguage-error');
   }
 
   /**
@@ -268,32 +268,32 @@ class Player extends BasePlayer {
     const id = this.playerId = guid.create();
 
     const player = document.createElement('p');
-    player.className = 'player';
+    player.className = 'itslanguage-player';
 
     const playButton = document.createElement('button');
     playButton.id = id + 'playtoggle';
-    playButton.className = 'playToggle';
+    playButton.className = 'itslanguage-playToggle';
     playButton.disabled = true;
 
     const playIcon = document.createElement('div');
-    playIcon.className = 'icon';
+    playIcon.className = 'itslanguage-icon';
 
     const range = document.createElement('span');
     range.id = id + 'range';
-    range.className = 'gutter';
+    range.className = 'itslanguage-gutter';
 
     const loading = document.createElement('span');
     loading.id = id + 'loading';
-    loading.className = 'loading';
+    loading.className = 'itslanguage-loading';
 
     const dragger = document.createElement('button');
     dragger.id = id + 'dragger';
-    dragger.className = 'handle';
+    dragger.className = 'itslanguage-handle';
     dragger.disabled = true;
 
     const timeIndication = document.createElement('span');
     timeIndication.id = id + 'timeindication';
-    timeIndication.className = 'timeindication';
+    timeIndication.className = 'itslanguage-timeindication';
 
     range.appendChild(dragger);
     range.appendChild(loading);
@@ -409,15 +409,15 @@ class MiniPlayer extends BasePlayer {
     const id = this.playerId = guid.create();
 
     const player = document.createElement('p');
-    player.className = 'player';
+    player.className = 'itslanguage-player';
 
     const playButton = document.createElement('button');
     playButton.id = id + 'playtoggle';
-    playButton.className = 'playToggle';
+    playButton.className = 'itslanguage-playToggle';
     playButton.disabled = true;
 
     const playIcon = document.createElement('div');
-    playIcon.className = 'icon';
+    playIcon.className = 'itslanguage-icon';
 
     playButton.appendChild(playIcon);
 
@@ -566,11 +566,11 @@ class Recorder {
       }
     });
     this.recorder.addEventListener('recording', id => {
-      this.dot.classList.remove('off');
+      this.dot.classList.remove('itslanguage-off');
     });
 
     this.recorder.addEventListener('recorded', () => {
-      this.dot.classList.add('off');
+      this.dot.classList.add('itslanguage-off');
     });
   }
 
@@ -627,26 +627,26 @@ class Recorder {
     const id = this.playerId = guid.create();
 
     const recorder = document.createElement('div');
-    recorder.className = 'recorder';
+    recorder.className = 'itslanguage-recorder';
 
     const timeIndication = document.createElement('span');
     timeIndication.id = id + 'timeindication';
-    timeIndication.className = 'timeindication';
+    timeIndication.className = 'itslanguage-timeindication';
 
     const canvas = document.createElement('canvas');
     canvas.id = id + 'canvas';
-    canvas.className = 'canvas';
+    canvas.className = 'itslanguage-canvas';
 
     const recordingButton = document.createElement('button');
     recordingButton.id = id + 'recordtoggle';
-    recordingButton.className = 'recordToggle noPermission';
+    recordingButton.className = 'itslanguage-recordToggle itslanguage-noPermission';
 
     const microphoneIcon = document.createElement('div');
-    microphoneIcon.className = 'icon';
+    microphoneIcon.className = 'itslanguage-icon';
 
     const pulsatingDot = document.createElement('div');
     pulsatingDot.id = id + 'dot';
-    pulsatingDot.className = 'pulse off';
+    pulsatingDot.className = 'itslanguage-pulse itslanguage-off';
 
     recordingButton.appendChild(microphoneIcon);
     recordingButton.appendChild(pulsatingDot);
@@ -659,7 +659,7 @@ class Recorder {
   }
 
   _permitRecorder() {
-    this.recordtoggle.classList.remove('noPermission');
+    this.recordtoggle.classList.remove('itslanguage-noPermission');
   }
 
   enableRecorder() {

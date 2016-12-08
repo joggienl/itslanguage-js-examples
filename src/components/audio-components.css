@@ -1,34 +1,34 @@
 /* Verdor prefix mixins */
 /* combinator is a wrapper class for player and recorder.
    It makes sure the recording area stays at the left side */
-.combinator {
+.itslanguage-combinator {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.combinator .recorder {
+.itslanguage-combinator .itslanguage-recorder {
     height: 100%;
     width: 60px;
 }
 
-.combinator .player {
+.itslanguage-combinator .itslanguage-player {
     height: 100%;
     top: 10px;
     left: 60px;
 }
 
-.defaultRecorder {
+.itslanguage-defaultRecorder {
     height: 60px;
     width: 480px;
 }
 
-.defaultPlayer {
+.itslanguage-defaultPlayer {
     height: 48px;
     width: 400px;
 }
 
-.player {
+.itslanguage-player {
     display: block;
     height: 48px;
     width: 400px;
@@ -37,7 +37,7 @@
     margin: 0;
 }
 
-.timeindication {
+.itslanguage-timeindication {
     font: 13px/20px "Helvetica Neue", Arial, sans-serif;
     line-height: 46px;
     position: absolute;
@@ -49,16 +49,16 @@
     margin-right: 10px;
 }
 
-.recorder .timeindication {
+.itslanguage-recorder .itslanguage-timeindication {
     top:40px;
     left:-25px;
 }
 
-.player .wrapper .timeindication {
+.itslanguage-player .itslanguage-wrapper .itslanguage-timeindication {
     right: 40px;
 }
 
-.player .gutter {
+.itslanguage-player .itslanguage-gutter {
     position: absolute;
     top: 19px;
     left: 50px;
@@ -72,11 +72,11 @@
     cursor: pointer;
 }
 
-.player .wrapper .gutter {
+.itslanguage-player .itslanguage-wrapper .itslanguage-gutter {
     right: 90px;
 }
 
-.player .segment {
+.itslanguage-player .itslanguage-segment {
     background-color: #6e6e6e;
     background-image: -moz-linear-gradient(top, #e2e2e2, #6e6e6e);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e2e2e2), to(#6e6e6e));
@@ -94,7 +94,7 @@
     border-radius: 5px;
 }
 
-.player .loading {
+.itslanguage-player .itslanguage-loading {
     background-color: #6e6e6e;
     background-image: -moz-linear-gradient(top, #e2e2e2, #6e6e6e);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e2e2e2), to(#6e6e6e));
@@ -112,7 +112,7 @@
     border-radius: 5px;
 }
 
-.player .handle {
+.itslanguage-player .itslanguage-handle {
     position: absolute;
     padding: 0;
     border: 0 none;
@@ -134,15 +134,15 @@
     background-repeat: no-repeat;
 }
 
-.player .handle:disabled {
+.itslanguage-player .itslanguage-handle:disabled {
     display: none;
 }
 
-.player .handle:hover {
+.itslanguage-player .itslanguage-handle:hover {
     box-shadow: inset 3px 5px 2px #626262;
 }
 
-.player .playToggle {
+.itslanguage-player .itslanguage-playToggle {
     position: absolute;
     top: 9px;
     left: 10px;
@@ -164,7 +164,7 @@
     background-repeat: no-repeat;
 }
 
-.player .playToggle:disabled {
+.itslanguage-player .itslanguage-playToggle:disabled {
     /* gradient position, gradient shape and size, from, to */
     background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
     background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
@@ -175,15 +175,15 @@
     opacity: 0.3;
 }
 
-.player .playToggle:hover {
+.itslanguage-player .itslanguage-playToggle:hover {
     box-shadow: inset 3px 5px 2px #626262;
 }
 
-.player .playToggle:disabled:hover {
+.itslanguage-player .itslanguage-playToggle:disabled:hover {
     box-shadow: none;
 }
 
-.player .playToggle .icon {
+.itslanguage-player .itslanguage-playToggle .itslanguage-icon {
     position: relative;
     left: 2px;
     margin-left: auto;
@@ -193,11 +193,11 @@
     background: url(../images/svg/play.svg) no-repeat;
 }
 
-.player .playToggle.playing .icon {
+.itslanguage-player .itslanguage-playToggle.itslanguage-playing .itslanguage-icon {
     background-image: url(../images/svg/pause.svg);
 }
 
-.player .playToggle.error {
+.itslanguage-player .itslanguage-playToggle.itslanguage-error {
     /* gradient position, gradient shape and size, from, to */
     background-image: radial-gradient(30% 10%, circle cover, #f5adad, #b80b0b, #dc7d7d);
     background-image: -webkit-radial-gradient(30% 10%, circle cover, #f5adad, #b80b0b, #dc7d7d);
@@ -206,17 +206,17 @@
     background-repeat: no-repeat;
 }
 
-.player .playToggle.error:hover {
+.itslanguage-player .itslanguage-playToggle.itslanguage-error:hover {
     box-shadow: inset 3px 5px 2px #911212;
 }
 
-.player .playToggle.error .icon {
+.itslanguage-player .itslanguage-playToggle.itslanguage-error .itslanguage-icon {
     background-image: url(../images/svg/error.svg);
     width: 60%;
     left: 6px;
 }
 
-.recorder {
+.itslanguage-recorder {
     height: 60px;
     width: 60px;
     position: absolute;
@@ -226,7 +226,7 @@
     /* Safari and Chrome */
 }
 
-.recorder .recordToggle {
+.itslanguage-recorder .itslanguage-recordToggle {
     position: absolute;
     border: 0 none;
     outline: none;
@@ -246,7 +246,7 @@
     background-repeat: no-repeat;
 }
 
-.recorder .recordToggle:disabled {
+.itslanguage-recorder .itslanguage-recordToggle:disabled {
     /* gradient position, gradient shape and size, from, to */
     background-image: radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
     background-image: -webkit-radial-gradient(30% 10%, circle cover, #e2e2e2, #6e6e6e, #e2e2e2);
@@ -257,15 +257,15 @@
     opacity: 0.3;
 }
 
-.recorder .recordToggle:hover {
+.itslanguage-recorder .itslanguage-recordToggle:hover {
     box-shadow: inset 3px 5px 2px #555555;
 }
 
-.recorder .recordToggle:disabled:hover {
+.itslanguage-recorder .itslanguage-recordToggle:disabled:hover {
     box-shadow: none;
 }
 
-.recorder .recordToggle .icon {
+.itslanguage-recorder .itslanguage-recordToggle .itslanguage-icon {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -275,11 +275,11 @@
     background-size: 55%;
 }
 
-.recorder .recordToggle.noPermission .icon {
+.itslanguage-recorder .itslanguage-recordToggle.itslanguage-noPermission .itslanguage-icon {
     background-image: url(../images/svg/mic_disabled.svg);
 }
 
-.recorder .canvas {
+.itslanguage-recorder .itslanguage-canvas {
     position: absolute;
     border: 0 none;
     top: 0;
@@ -348,7 +348,7 @@
     }
 }
 
-.recorder .pulse {
+.itslanguage-recorder .itslanguage-pulse {
     position: absolute;
     bottom: 15%;
     width: 20%;
@@ -361,7 +361,7 @@
     animation: redPulse 1s infinite, fadeInOut 2s 1;
 }
 
-.recorder .pulse.off {
+.itslanguage-recorder .itslanguage-pulse.itslanguage-off {
     background-color: #6a1b03;
     box-shadow: none;
     -webkit-animation: none;
@@ -372,9 +372,9 @@
    They can be applied by adding the `user` or `model` class
    to the visual component container.
 */
-.user .player .handle,
-.user .player .playToggle,
-.user .recorder .recordToggle {
+.itslanguage-user .itslanguage-player .itslanguage-handle,
+.itslanguage-user .itslanguage-player .itslanguage-playToggle,
+.itslanguage-user .itslanguage-recorder .itslanguage-recordToggle {
     /* gradient position, gradient shape and size, from, to */
     background-image: radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
     background-image: -webkit-radial-gradient(30% 10%, circle cover, #dee9f3, #5581b2, #dee9f3);
@@ -383,24 +383,24 @@
     background-repeat: no-repeat;
 }
 
-.user .player .handle:hover,
-.user .player .playToggle:hover,
-.user .recorder .recordToggle:hover,
-.user .player .handleactive,
-.user .player .playToggleactive,
-.user .recorder .recordToggleactive {
+.itslanguage-user .itslanguage-player .itslanguage-handle:hover,
+.itslanguage-user .itslanguage-player .itslanguage-playToggle:hover,
+.itslanguage-user .itslanguage-recorder .itslanguage-recordToggle:hover,
+.itslanguage-user .itslanguage-player .itslanguage-handleactive,
+.itslanguage-user .itslanguage-player .itslanguage-playToggleactive,
+.itslanguage-user .itslanguage-recorder .itslanguage-recordToggleactive {
     box-shadow: inset 3px 5px 2px #426892;
 }
 
-.user .player .handle:disabled:hover,
-.user .player .playToggle:disabled:hover,
-.user .recorder .recordToggle:disabled:hover {
+.itslanguage-user .itslanguage-player .itslanguage-handle:disabled:hover,
+.itslanguage-user .itslanguage-player .itslanguage-playToggle:disabled:hover,
+.itslanguage-user .itslanguage-recorder .itslanguage-recordToggle:disabled:hover {
     box-shadow: none;
 }
 
-.model .player .handle,
-.model .player .playToggle,
-.model .recorder .recordToggle {
+.itslanguage-model .itslanguage-player .itslanguage-handle,
+.itslanguage-model .itslanguage-player .itslanguage-playToggle,
+.itslanguage-model .itslanguage-recorder .itslanguage-recordToggle {
     /* gradient position, gradient shape and size, from, to */
     background-image: radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
     background-image: -webkit-radial-gradient(30% 10%, circle cover, #e6e9c2, #7c842d, #e6e9c2);
@@ -409,26 +409,26 @@
     background-repeat: no-repeat;
 }
 
-.model .player .handle:hover,
-.model .player .playToggle:hover,
-.model .recorder .recordToggle:hover,
-.model .player .handleactive,
-.model .player .playToggleactive,
-.model .recorder .recordToggleactive {
+.itslanguage-model .itslanguage-player .itslanguage-handle:hover,
+.itslanguage-model .itslanguage-player .itslanguage-playToggle:hover,
+.itslanguage-model .itslanguage-recorder .itslanguage-recordToggle:hover,
+.itslanguage-model .itslanguage-player .itslanguage-handleactive,
+.itslanguage-model .itslanguage-player .itslanguage-playToggleactive,
+.itslanguage-model .itslanguage-recorder .itslanguage-recordToggleactive {
     box-shadow: inset 3px 5px 2px #585e20;
 }
 
-.model .player .handle:disabled:hover,
-.model .player .playToggle:disabled:hover,
-.model .recorder .recordToggle:disabled:hover {
+.itslanguage-model .itslanguage-player .itslanguage-handle:disabled:hover,
+.itslanguage-model .itslanguage-player .itslanguage-playToggle:disabled:hover,
+.itslanguage-model .itslanguage-recorder .itslanguage-recordToggle:disabled:hover {
     box-shadow: none;
 }
 
 /* The `user` or `model` class should also be applied within in the
    SegmentPlayer, where there's a mix of `user/model` content.
 */
-.user .player .loading,
-.loading.user {
+.itslanguage-user .itslanguage-player .itslanguage-loading,
+.itslanguage-loading.itslanguage-user {
     background-color: #5581b2;
     background-image: -moz-linear-gradient(top, #dee9f3, #5581b2);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#dee9f3), to(#5581b2));
@@ -439,8 +439,8 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdee9f3', endColorstr='#ff5581b2', GradientType=0);
 }
 
-.model .player .loading,
-.loading.model {
+.itslanguage-model .itslanguage-player .itslanguage-loading,
+.itslanguage-loading.itslanguage-model {
     background-color: #7c842d;
     background-image: -moz-linear-gradient(top, #e6e9c2, #7c842d);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e6e9c2), to(#7c842d));
@@ -451,7 +451,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e9c2', endColorstr='#ff7c842d', GradientType=0);
 }
 
-.segment.user {
+.itslanguage-segment.itslanguage-user {
     opacity: 0.4;
     background-color: #5581b2;
     background-image: -moz-linear-gradient(top, #dee9f3, #5581b2);
@@ -463,7 +463,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdee9f3', endColorstr='#ff5581b2', GradientType=0);
 }
 
-.segment.model {
+.itslanguage-segment.itslanguage-model {
     opacity: 0.4;
     background-color: #7c842d;
     background-image: -moz-linear-gradient(top, #e6e9c2, #7c842d);
@@ -475,49 +475,49 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe6e9c2', endColorstr='#ff7c842d', GradientType=0);
 }
 
-.drop {
+.itslanguage-drop {
     width: 100px;
     height: 100px;
 }
 
-.drop.user {
+.itslanguage-drop.itslanguage-user {
     background-color: #dee9f3;
 }
 
-.drop.model {
+.itslanguage-drop.itslanguage-model {
     background-color: #e6e9c2;
 }
 
-.colouredSentence {
+.itslanguage-colouredSentence {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.colouredSentence .good {
+.itslanguage-colouredSentence .itslanguage-good {
     color: #39972c;
 }
 
-.colouredSentence .moderate {
+.itslanguage-colouredSentence .itslanguage-moderate {
     color: #f19020;
     text-decoration: underline;
 }
 
-.colouredSentence .bad {
+.itslanguage-colouredSentence .itslanguage-bad {
     color: #c00817;
     text-decoration: line-through;
 }
 
-.colouredSentence .punctuation {
+.itslanguage-colouredSentence .itslanguage-punctuation {
     color: #39972c;
 }
 
-.detailedScores td.good {
+.itslanguage-detailedScores td.itslanguage-good {
     color: #39972c;
 }
 
-.detailedScores td.moderate {
+.itslanguage-detailedScores td.itslanguage-moderate {
     color: #f19020;
 }
 
-.detailedScores td.bad {
+.itslanguage-detailedScores td.itslanguage-bad {
     color: #c00817;
 }
