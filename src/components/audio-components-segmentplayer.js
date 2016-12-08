@@ -334,28 +334,28 @@ class SegmentPlayer extends BaseSegmentPlayer {
     const self = this;
 
     const player = document.createElement('p');
-    player.className = 'player';
+    player.className = 'itslanguage-player';
 
     const playButton = document.createElement('button');
     playButton.id = id + 'playtoggle';
-    playButton.className = 'playToggle';
+    playButton.className = 'itslanguage-playToggle';
     playButton.disabled = true;
 
     const playIcon = document.createElement('div');
-    playIcon.className = 'icon';
+    playIcon.className = 'itslanguage-icon';
 
     const range = document.createElement('span');
     range.id = id + 'range';
-    range.className = 'gutter';
+    range.className = 'itslanguage-gutter';
 
     const dragger = document.createElement('button');
     dragger.id = id + 'dragger';
-    dragger.className = 'handle';
+    dragger.className = 'itslanguage-handle';
     dragger.disabled = true;
 
     const timeindication = document.createElement('span');
     timeindication.id = id + 'timeindication';
-    timeindication.className = 'timeindication';
+    timeindication.className = 'itslanguage-timeindication';
 
     range.appendChild(dragger);
 
@@ -505,15 +505,15 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
     const id = this.playerId = guid.create();
 
     const player = document.createElement('p');
-    player.className = 'player';
+    player.className = 'itslanguage-player';
 
     const playButton = document.createElement('button');
     playButton.id = id + 'playtoggle';
-    playButton.className = 'playToggle';
+    playButton.className = 'itslanguage-playToggle';
     playButton.disabled = true;
 
     const playIcon = document.createElement('div');
-    playIcon.className = 'icon';
+    playIcon.className = 'itslanguage-icon';
 
     playButton.appendChild(playIcon);
 

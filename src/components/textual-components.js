@@ -26,13 +26,13 @@ class ColouredSentence {
         const newElement = document.createElement('span');
         newElement.innerHTML = chunk.graphemes;
         if (chunk.verdict === 'good') {
-          newElement.className = 'good';
+          newElement.className = 'itslanguage-good';
         } else if (chunk.verdict === 'moderate') {
-          newElement.className = 'moderate';
+          newElement.className = 'itslanguage-moderate';
         } else if (chunk.verdict === 'bad') {
-          newElement.className = 'bad';
+          newElement.className = 'itslanguage-bad';
         } else {
-          newElement.className = 'punctuation';
+          newElement.className = 'itslanguage-punctuation';
         }
         for (const phoneme of chunk.phonemes) {
           newElement.setAttribute('title', phoneme.confidenceScore);
@@ -53,10 +53,10 @@ class ColouredSentence {
     const spans = this.settings.element.querySelectorAll('span');
     // Remove all markup classes.
     for (const span of spans) {
-      span.classList.remove('good');
-      span.classList.remove('moderate');
-      span.classList.remove('bad');
-      span.classList.remove('punctuation');
+      span.classList.remove('itslanguage-good');
+      span.classList.remove('itslanguage-moderate');
+      span.classList.remove('itslanguage-bad');
+      span.classList.remove('itslanguage-punctuation');
     }
   }
 }
@@ -141,11 +141,11 @@ class DetailedScores {
           column1.innerHTML = chunk.graphemes + '(' + phoneme.ipa + ')';
           if (this.settings.thresholdGood && this.settings.thresholdBad) {
             if (phoneme.confidenceScore >= this.settings.thresholdGood) {
-              column1.classList.add('good');
+              column1.classList.add('itslanguage-good');
             } else if (phoneme.confidenceScore <= this.settings.thresholdBad) {
-              column1.classList.add('bad');
+              column1.classList.add('itslanguage-bad');
             } else {
-              column1.classList.add('moderate');
+              column1.classList.add('itslanguage-moderate');
             }
           }
           row.appendChild(column1);
@@ -210,11 +210,11 @@ class DetailedScores {
           column1.innerHTML = chunk.graphemes + '(' + phoneme.ipa + ')';
           if (this.settings.thresholdGood && this.settings.thresholdBad) {
             if (phoneme.score >= this.settings.thresholdGood) {
-              column1.classList.add('good');
+              column1.classList.add('itslanguage-good');
             } else if (phoneme.score <= this.settings.thresholdBad) {
-              column1.classList.add('bad');
+              column1.classList.add('itslanguage-bad');
             } else {
-              column1.classList.add('moderate');
+              column1.classList.add('itslanguage-moderate');
             }
           }
           row.appendChild(column1);
