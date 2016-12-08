@@ -1,7 +1,11 @@
 const path = require('path');
 
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
+
+
+const outputPath = path.resolve(__dirname, 'dist');
 
 
 module.exports = {
@@ -16,7 +20,7 @@ module.exports = {
     inline: true
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: outputPath,
     publicPath: '/',
     filename: '[name]/[name].js'
   },
@@ -53,6 +57,7 @@ module.exports = {
   },
   externals: ['ws'],
   plugins: [
+    new CleanWebpackPlugin([outputPath]),
     new webpack.ContextReplacementPlugin(/bindings$/, /^$/),
     new ExtractTextPlugin('[name]/index.html')
   ]
