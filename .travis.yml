@@ -3,3 +3,8 @@ dist: trusty
 node_js:
   - node
 sudo: required
+script: "bash ./deploy.sh"
+env:
+  global:
+  - ENCRYPTION_LABEL: "4c94bd704073"
+  - COMMIT_AUTHOR_EMAIL: "loek@d-centralize.nl"
