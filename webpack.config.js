@@ -1,6 +1,11 @@
 const path = require('path');
 
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
+
+
+const outputPath = path.resolve(__dirname, 'dist');
 
 
 module.exports = {
@@ -15,8 +20,8 @@ module.exports = {
     inline: true
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
+    path: outputPath,
+    publicPath: '../',
     filename: '[name]/[name].js'
   },
   devtool: 'inline-source-map',
@@ -27,7 +32,7 @@ module.exports = {
     loaders: [
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: ExtractTextPlugin.extract('html')
       },
       {
         test: /\.json$/,
@@ -38,7 +43,7 @@ module.exports = {
         loader: 'style!css'
       },
       {
-        test: /\.(woff|woff2|ttf|eot|svg)$/,
+        test: /\.(png|woff|woff2|ttf|eot|svg)$/,
         loader: 'file'
       },
       {
@@ -52,6 +57,10 @@ module.exports = {
   },
   externals: ['ws'],
   plugins: [
-    new webpack.ContextReplacementPlugin(/bindings$/, /^$/)
+    new CleanWebpackPlugin([outputPath], {
+      exclude: ['index.html']
+    }),
+    new webpack.ContextReplacementPlugin(/bindings$/, /^$/),
+    new ExtractTextPlugin('[name]/index.html')
   ]
 };
