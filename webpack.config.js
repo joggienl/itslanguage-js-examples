@@ -57,7 +57,9 @@ module.exports = {
   },
   externals: ['ws'],
   plugins: [
-    new CleanWebpackPlugin([outputPath]),
+    new CleanWebpackPlugin([outputPath], {
+      exclude: ['index.html']
+    }),
     new webpack.ContextReplacementPlugin(/bindings$/, /^$/),
     new ExtractTextPlugin('[name]/index.html')
   ]
