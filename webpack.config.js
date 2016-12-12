@@ -10,9 +10,9 @@ const outputPath = path.resolve(__dirname, 'dist');
 
 module.exports = {
   entry: {
-    demo: path.resolve(__dirname, 'src/demo/demo.js'),
     recordingDemo: path.resolve(__dirname, 'src/recordingDemo/recordingDemo.js'),
     analysisDemo: path.resolve(__dirname, 'src/analysisDemo/analysisDemo.js'),
+    recognitionDemo: path.resolve(__dirname, 'src/recognitionDemo/recognitionDemo.js'),
     audioReferenceDemo: path.resolve(__dirname, 'src/audioReferenceDemo/audioReferenceDemo.js')
   },
   devServer: {
@@ -50,7 +50,7 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015-loose']
+          presets: [["es2015", {"loose": true}]]
         }
       }
     ]
