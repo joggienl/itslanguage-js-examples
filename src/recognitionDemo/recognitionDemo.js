@@ -122,14 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // player.load(result.audioUrl);
 
         //See if anything got recognized.
-        const recognised = result.recognised;
+        const recognised = result.recognition.recognised;
         if (!recognised) {
           throw new Error('Nothing recognized');
         }
         document.getElementById('recognitionResult').innerHTML = 'Recognized:' + recognised;
 
         // Set download url.
-        downloadUrl.value = result.audioUrl;
+        downloadUrl.value = result.recognition.audioUrl;
         downloadUrl.removeAttribute('disabled');
 
         // Start another session when done.
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('errorMsg').classList.add('alert');
         document.getElementById('errorMsg').classList.add('alert-warning');
         // Retry another session.
-        //startRecognitionSession();
+        setTimeout(startRecognitionSession, 500);
       });
   }
 
