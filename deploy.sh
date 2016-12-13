@@ -29,6 +29,10 @@ ssh-add itsl_example_deploy_key
 
 npm run build
 
+cd dist
+git checkout origin/gh-pages index.html
+cd ..
+
 git add dist/
 git commit -m "Deploy to GitHub Pages: ${SHA}"
 
