@@ -30,7 +30,7 @@ ssh-add itsl_example_deploy_key
 npm run build
 
 cd dist
-git checkout origin/gh-pages index.html
+git checkout gh-pages index.html
 cd ..
 
 git add dist/
