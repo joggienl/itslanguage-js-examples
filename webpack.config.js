@@ -49,8 +49,9 @@ module.exports = {
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
+        include: /src/,
         query: {
-          presets: [["es2015", {"loose": true}]]
+          presets: ["es2015"]
         }
       }
     ]
