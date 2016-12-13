@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // player.load(result.audioUrl);
 
         // Set download url.
-        downloadUrl.value = result.audioUrl;
+        downloadUrl.value = result.recording.audioUrl;
         downloadUrl.removeAttribute('disabled');
 
         // Start another session when done.
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('errored', error);
         UIRecorder.disableRecorder();
         // Try again
-        startRecordingSession();
+        setTimeout(startRecordingSession, 500);
       });
   }
 
