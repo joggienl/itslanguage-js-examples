@@ -30,7 +30,7 @@ ssh-add itsl_example_deploy_key
 npm run build
 
 cd dist
-git checkout gh-pages index.html
+wget https://raw.githubusercontent.com/itslanguage/itslanguage-js-examples/gh-pages/index.html
 cd ..
 
 git add dist/
