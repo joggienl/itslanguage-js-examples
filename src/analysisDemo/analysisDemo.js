@@ -154,14 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // player.load(result.audioUrl);
 
         // Display results.
-        detailedScoresComponent.showResults(result.analysis.analysis.words);
+        detailedScoresComponent.showResults(result.analysis.words);
         const table = detailedScores.children[0];
         table.classList.add('table');
         table.classList.add('table-striped');
         table.classList.add('table-bordered');
 
         // Set download url.
-        downloadUrl.value = result.analysis.analysis.audioUrl;
+        downloadUrl.value = result.analysis.audioUrl;
         downloadUrl.removeAttribute('disabled');
 
         // Start another session when done.
