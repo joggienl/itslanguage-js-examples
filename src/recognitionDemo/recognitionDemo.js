@@ -141,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('errorMsg').innerText = 'Recognition Failed. Please try Again';
         document.getElementById('errorMsg').classList.add('alert');
         document.getElementById('errorMsg').classList.add('alert-warning');
+        document.getElementById('recognitionResult').innerHTML = 'Recognized: -';
         // Retry another session.
         setTimeout(startRecognitionSession, 500);
       });
