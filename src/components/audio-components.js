@@ -4,7 +4,7 @@
  */
 
 require('./audio-components.css');
-const guid = require('guid');
+const uuid = require('node-uuid');
 const its = require('itslanguage');
 /**
  * @title ITSLanguage Javascript Audio
@@ -265,7 +265,7 @@ class Player extends BasePlayer {
    *
    */
   _getUI() {
-    const id = this.playerId = guid.create();
+    const id = this.playerId = uuid.v4();
 
     const player = document.createElement('p');
     player.className = 'itslanguage-player';
@@ -406,7 +406,7 @@ class MiniPlayer extends BasePlayer {
    *
    */
   _getUI() {
-    const id = this.playerId = guid.create();
+    const id = this.playerId = uuid.v4();
 
     const player = document.createElement('p');
     player.className = 'itslanguage-player';
@@ -624,7 +624,7 @@ class Recorder {
    *
    */
   _getUI() {
-    const id = this.playerId = guid.create();
+    const id = this.playerId = uuid.v4();
 
     const recorder = document.createElement('div');
     recorder.className = 'itslanguage-recorder';

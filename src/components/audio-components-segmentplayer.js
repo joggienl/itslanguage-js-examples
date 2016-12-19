@@ -2,7 +2,7 @@
  max-len
  */
 
-const guid = require('guid');
+const uuid = require('node-uuid');
 const Player = require('./audio-components').Player;
 
 class BaseSegmentPlayer {
@@ -329,7 +329,7 @@ class SegmentPlayer extends BaseSegmentPlayer {
    *
    */
   _getUI() {
-    const id = this.playerId = guid.create();
+    const id = this.playerId = uuid.v4();
 
     const self = this;
 
@@ -502,7 +502,7 @@ class MiniSegmentPlayer extends BaseSegmentPlayer {
    *
    */
   _getUI() {
-    const id = this.playerId = guid.create();
+    const id = this.playerId = uuid.v4();
 
     const player = document.createElement('p');
     player.className = 'itslanguage-player';
