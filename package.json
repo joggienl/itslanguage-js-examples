@@ -20,7 +20,7 @@
   "homepage": "https://github.com/itslanguage/itslanguage-js-examples#readme",
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "itslanguage": "^0.4.0",
+    "itslanguage": "^1.1.0",
     "node-uuid": "^1.4.7",
     "raven-js": "^3.7.0",
     "wavesurfer.js": "^1.2.6"
