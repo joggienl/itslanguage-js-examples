@@ -86,8 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
-  const existingRecordingChallenge = new its.SpeechChallenge(existingOrganization.id, settings.RECORDING_CHALLENGE_ID,
-    'dummy');
+  const existingRecordingChallenge = new its.SpeechChallenge(settings.RECORDING_CHALLENGE_ID, 'dummy');
 
   function startRecordingSession() {
     const downloadUrl = document.getElementById('downloadUrl');

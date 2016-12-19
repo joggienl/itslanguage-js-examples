@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
-  const existingPronunciationChallenge = new its.PronunciationChallenge(existingOrganization.id,
-    settings.ANALYSIS_CHALLENGE_ID, analysisPrompt);
+  const existingPronunciationChallenge = new its.PronunciationChallenge(settings.ANALYSIS_CHALLENGE_ID,
+    analysisPrompt);
 
   function startAnalysisSession() {
     const downloadUrl = document.getElementById('downloadUrl');
