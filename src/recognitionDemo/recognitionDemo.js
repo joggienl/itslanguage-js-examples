@@ -138,6 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(error => {
         UIRecorder.disableRecorder();
         console.log('error', error);
+
+        //The audio is still available to be downloaded.
+        downloadUrl.value = error.recognition.audioUrl;
+        downloadUrl.removeAttribute('disabled');
+
         document.getElementById('errorMsg').innerText = 'Recognition Failed. Please try Again';
         document.getElementById('errorMsg').classList.add('alert');
         document.getElementById('errorMsg').classList.add('alert-warning');

@@ -173,6 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('errorMsg').innerText = 'Analysis Failed. Please try Again';
         document.getElementById('errorMsg').classList.add('alert');
         document.getElementById('errorMsg').classList.add('alert-warning');
+
+        //The audio is still available to be downloaded.
+        downloadUrl.value = error.analysis.audioUrl;
+        downloadUrl.removeAttribute('disabled');
+
         // Retry another session.
         setTimeout(startAnalysisSession, 500);
       });

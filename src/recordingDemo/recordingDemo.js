@@ -113,6 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(error => {
         console.error('errored', error);
+
+        //The audio is still available to be downloaded.
+        downloadUrl.value = error.recording.audioUrl;
+        downloadUrl.removeAttribute('disabled');
+
         UIRecorder.disableRecorder();
         // Try again
         setTimeout(startRecordingSession, 500);
