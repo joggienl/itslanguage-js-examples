@@ -96,8 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
-  const existingRecognitionChallenge = new its.ChoiceChallenge(existingOrganization.id,
-    settings.RECOGNITION_CHALLENGE_ID, recognitionHint, recognitionChoices);
+  const existingRecognitionChallenge = new its.ChoiceChallenge(settings.RECOGNITION_CHALLENGE_ID, recognitionHint,
+    recognitionChoices);
 
   const facade = new its.AdministrativeSDK(connection);
 
@@ -138,6 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(error => {
         UIRecorder.disableRecorder();
         console.log('error', error);
+
+        //The audio is still available to be downloaded.
+        downloadUrl.value = error.recognition.audioUrl;
+        downloadUrl.removeAttribute('disabled');
+
         document.getElementById('errorMsg').innerText = 'Recognition Failed. Please try Again';
         document.getElementById('errorMsg').classList.add('alert');
         document.getElementById('errorMsg').classList.add('alert-warning');

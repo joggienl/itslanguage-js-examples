@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
-  const existingPronunciationChallenge = new its.PronunciationChallenge(existingOrganization.id,
-    settings.ANALYSIS_CHALLENGE_ID, analysisPrompt);
+  const existingPronunciationChallenge = new its.PronunciationChallenge(settings.ANALYSIS_CHALLENGE_ID,
+    analysisPrompt);
 
   function startAnalysisSession() {
     const downloadUrl = document.getElementById('downloadUrl');
@@ -173,6 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('errorMsg').innerText = 'Analysis Failed. Please try Again';
         document.getElementById('errorMsg').classList.add('alert');
         document.getElementById('errorMsg').classList.add('alert-warning');
+
+        //The audio is still available to be downloaded.
+        downloadUrl.value = error.analysis.audioUrl;
+        downloadUrl.removeAttribute('disabled');
+
         // Retry another session.
         setTimeout(startAnalysisSession, 500);
       });

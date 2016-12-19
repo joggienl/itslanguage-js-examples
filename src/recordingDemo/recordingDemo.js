@@ -86,8 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
   const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
-  const existingRecordingChallenge = new its.SpeechChallenge(existingOrganization.id, settings.RECORDING_CHALLENGE_ID,
-    'dummy');
+  const existingRecordingChallenge = new its.SpeechChallenge(settings.RECORDING_CHALLENGE_ID, 'dummy');
 
   function startRecordingSession() {
     const downloadUrl = document.getElementById('downloadUrl');
@@ -114,6 +113,11 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .catch(error => {
         console.error('errored', error);
+
+        //The audio is still available to be downloaded.
+        downloadUrl.value = error.recording.audioUrl;
+        downloadUrl.removeAttribute('disabled');
+
         UIRecorder.disableRecorder();
         // Try again
         setTimeout(startRecordingSession, 500);
