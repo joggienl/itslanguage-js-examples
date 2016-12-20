@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //See if anything got recognized.
         const recognised = result.recognition.recognised;
         if (!recognised) {
-          throw new Error('Nothing recognized');
+          throw result;
         }
         document.getElementById('recognitionResult').innerHTML = 'Recognized:' + recognised;
 
