@@ -109,7 +109,7 @@ class Player extends BasePlayer {
 
     this.player.bindStopwatch(time => {
       if (!this.draggerDown) {
-        const duration = this.totalDuration;
+        const duration = this.totalDuration / this.player.getPlaybackRate();
         const text = Player._timerText(time / 10) + ' / ' + Player._timerText(duration);
         _updateTimeIndication(this.timeindication, text);
         this._positionUpdate(this.player);
