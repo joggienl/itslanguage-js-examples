@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Represent the existing entities in the database for clarity.
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
-  const existingStudent = new its.Student(existingOrganization.id, studentId, studentName);
+  const existingStudent = new its.User(existingOrganization.id, studentId, studentName);
   const existingRecordingChallenge = new its.SpeechChallenge(settings.RECORDING_CHALLENGE_ID, 'dummy');
 
   function startRecordingSession() {
