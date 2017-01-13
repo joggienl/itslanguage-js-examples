@@ -7,7 +7,7 @@
  * are created in dedicated .js files. You too can create your own view of those elements. Read the documentation on
  * the GitHub page on the requirements.
  *
- * For this demo the following Tenant, BasicAuth, Organization, Student and SpeechChallenge have been created in
+ * For this demo the following Tenant, BasicAuth, Organization, User and SpeechChallenge have been created in
  * the pilot environment:
  * If you do not know what those are, read the API docs.
  * If you want to see how you add those entities yourself, follow the relevant examples.
@@ -25,9 +25,11 @@
  * - id:          dummy
  * - name:        dummy
  *
- * Student:
+ * User:
  * - id:          dummy
- * - firstName:   dummy
+ * - profile:     null
+ * - groups:      null
+ * - roles:       [STUDENT]
  *
  * SpeechChallenge:
  * - id: recording
@@ -76,8 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const credentials = settings.API_CREDENTIALS;
   const organizationId = 'dummy';
   const organizationName = 'dummy';
-  const studentId = 'dummy';
-  const studentName = 'dummy';
+  const userRoles = ['STUDENT'];
 
   // Request microphone access.
   recorder.requestUserMedia();
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Represent the existing entities in the database for clarity.
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
-  const existingStudent = new its.User(existingOrganization.id, studentId, studentName);
+  const existingStudent = new its.User(existingOrganization.id, null, null, userRoles);
   const existingRecordingChallenge = new its.SpeechChallenge(settings.RECORDING_CHALLENGE_ID, 'dummy');
 
   function startRecordingSession() {

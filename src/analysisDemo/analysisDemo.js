@@ -8,7 +8,7 @@
  * You too can create your own view of those elements. Read the documentation on
  * the GitHub page on the requirements.
  *
- * For this demo the following Tenant, BasicAuth, Organization, Student and PronunciationChallenge have been created in
+ * For this demo the following Tenant, BasicAuth, Organization, User and PronunciationChallenge have been created in
  * the pilot environment:
  * If you do not know what those are, read the API docs on //TODO
  * If you want to see how you add those entities yourself, follow the relevant examples.
@@ -26,9 +26,11 @@
  * - id:            dummy
  * - name:          dummy
  *
- * Student:
- * - id:            dummy
- * - firstName:     dummy
+ * User:
+ * - id:          dummy
+ * - profile:     null
+ * - groups:      null
+ * - roles:       [STUDENT]
  *
  * PronunciationChallenge:
  * - id:            analysis_bird_watching
@@ -91,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const sdk = new its.AdministrativeSDK(connection);
   const organizationId = 'dummy';
   const organizationName = 'dummy';
-  const studentId = 'dummy';
-  const studentName = 'dummy';
+  const userRoles = ['STUDENT'];
 
   const tenantId = settings.API_TENANT_ID;
   const principal = settings.API_PRINCIPAL;
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Represent the existing entities in the database for clarity.
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
-  const existingStudent = new its.User(existingOrganization.id, studentId, studentName);
+  const existingStudent = new its.User(existingOrganization.id, null, null, userRoles);
   const existingPronunciationChallenge = new its.PronunciationChallenge(settings.ANALYSIS_CHALLENGE_ID,
     analysisPrompt);
 
