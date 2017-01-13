@@ -10,7 +10,7 @@
  *
  * For this demo the following Tenant, BasicAuth, Organization, User and PronunciationChallenge have been created in
  * the pilot environment:
- * If you do not know what those are, read the API docs on //TODO
+ * If you do not know what those are, read the API docs.
  * If you want to see how you add those entities yourself, follow the relevant examples.
  *
  * Tenant:
