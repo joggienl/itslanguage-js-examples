@@ -1,9 +1,9 @@
 {
   "API_URL": "https://api-dot-itsl-pilot.itsapi.com",
-  "API_PRINCIPAL": "demo",
+  "API_PRINCIPAL": "michiel.sanders@itslanguage.nl",
   "API_TENANT_ID": "demo",
-  "API_CREDENTIALS": "pilotpassword",
   "API_WS_URL": "wss://mvm-dot-itsl-pilot.itsapi.com:9000",
+  "API_CREDENTIALS": "test",
   "RECORDING_CHALLENGE_ID": "recording",
   "ANALYSIS_CHALLENGE_ID": "analysis_bird_watching",
   "RECOGNITION_CHALLENGE_ID": "recognition_transportation"

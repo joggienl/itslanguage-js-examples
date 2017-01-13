@@ -4,7 +4,7 @@
  * You too can create your own view of those elements. Read the documentation on
  * the GitHub page on the requirements.
  *
- * For this demo the following Tenant, BasicAuth, Organization, Student and RecognitionChallenge have been created in
+ * For this demo the following Tenant, BasicAuth, Organization, User and RecognitionChallenge have been created in
  * the pilot environment:
  * If you do not know what those are, read the API docs.
  * If you want to see how you add those entities yourself, follow the relevant examples.
@@ -22,9 +22,11 @@
  * - id:            dummy
  * - name:          dummy
  *
- * Student:
- * - id:            dummy
- * - firstName:     dummy
+ * User:
+ * - id:          dummy
+ * - profile:     null
+ * - groups:      null
+ * - roles:       [STUDENT]
  *
  * RecognitionChallenge:
  * - id:            recognition_transportation
@@ -70,8 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const connection = new its.Connection(config);
   const organizationId = 'dummy';
   const organizationName = 'dummy';
-  const studentId = 'dummy';
-  const studentName = 'dummy';
+  const userRoles = ['STUDENT'];
   const recognitionHint = 'Transportation on four wheels for many people.';
   const recognitionChoices = ['bike', 'bus', 'car'];
 
@@ -95,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Represent the existing entities in the database for clarity.
   const existingBasicAuth = new its.BasicAuth(tenantId, principal, credentials);
   const existingOrganization = new its.Organisation(organizationId, organizationName);
-  const existingStudent = new its.User(existingOrganization.id, studentId, studentName);
+  const existingStudent = new its.User(existingOrganization.id, null, null, userRoles);
   const existingRecognitionChallenge = new its.ChoiceChallenge(settings.RECOGNITION_CHALLENGE_ID, recognitionHint,
     recognitionChoices);
 
