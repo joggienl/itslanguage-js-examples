@@ -4,6 +4,8 @@ Welcome to the ITSLanguage Example project. This project contains examples for
 the [ITSLanguage JavaScript SDK](https://www.npmjs.com/package/itslanguage).
 You can use these examples as a reference guide to how you will use the SDK in your own website.
 
+View and interact with live demos of the recording, analysis and recognition functionality of the SDK on our [GitHub Pages site!](https://itslanguage.github.io/itslanguage-js-examples/)
+
 ## Getting Started
 
 You can view the code in the files contained in this project, or run the project in a local server
