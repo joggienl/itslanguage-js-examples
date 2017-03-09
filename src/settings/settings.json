@@ -1,6 +1,6 @@
 {
   "API_URL": "https://api-dot-itsl-pilot.itsapi.com",
-  "API_PRINCIPAL": "michiel.sanders@itslanguage.nl",
+  "API_PRINCIPAL": "art",
   "API_TENANT_ID": "demo",
   "API_WS_URL": "wss://mvm-dot-itsl-pilot.itsapi.com:9000",
   "API_CREDENTIALS": "test",

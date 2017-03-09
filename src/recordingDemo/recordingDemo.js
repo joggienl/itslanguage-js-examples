@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startRecordingSession();
   });
 
-  connection.getOauth2Token(existingBasicAuth, existingOrganization.id, existingStudent.id)
+  connection.getUserAuth(existingBasicAuth, existingOrganization.id)
     // Connect to the websocket as this student.
     .then(() => connection.webSocketConnect())
     .catch(error => {
